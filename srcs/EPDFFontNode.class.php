@@ -73,7 +73,7 @@ class EPDFFontNode extends EPDFNode {
         $this->_properties['LastChar']['value'] = null;      $this->_properties['LastChar']['parsing'] = 'defaultExtraction';       $this->_properties['LastChar']['fallback'] = 'defaultFallback';
         $this->_properties['Widths']['value'] = null;        $this->_properties['Widths']['parsing'] = 'defaultExtraction';         $this->_properties['Widths']['fallback'] = 'defaultFallback';
         $this->_properties['IsFixedPitch']['value'] = null;  $this->_properties['IsFixedPitch']['parsing'] = 'defaultExtraction';   $this->_properties['IsFixedPitch']['fallback'] = 'defaultFallback';
-        $this->_properties['Flags']['value'] = null;         $this->_properties['Flags']['parsing'] = 'defaultExtraction';          $this->_properties['Flags']['fallback'] = 'defaultFallback';
+        $this->_properties['Flags']['value'] = null;         $this->_properties['Flags']['parsing'] = 'defaultExtraction';          $this->_properties['Flags']['fallback'] = 'flagFallback';
 
 
     }
@@ -90,7 +90,8 @@ class EPDFFontNode extends EPDFNode {
                 $this->_properties[$words[0]]['value'] = call_user_func(__NAMESPACE__ .'\EPDFFontNode::' . $this->_properties[$words[0]]['parsing'], $words);
             }
         }
-
+        
+        $this->extractWidths($lines);
         //fallback call
         foreach ($this->_properties as $key => $value) {
             if (!$value['value']) {
@@ -99,6 +100,28 @@ class EPDFFontNode extends EPDFNode {
         }
     }
 
+    private function extractWidths($lines) {
+        $firstChar = null;
+        $lastChar = null;
+        foreach ($lines as $line) {
+            if (preg_match("; N .notdef ;", $line)) {
+                continue;
+            }
+            //C 6 ; WX 500 ; N .notdef ; B 49 0 451 700 ; ---------> pattern sample
+            if (preg_match("/C [0-9]+ ; WX [0-9]+ ;.*/", $line))
+            {
+                $words = explode(" ", $line);
+                $lastChar = $words[1];
+                if (!$firstChar) {
+                    $firstChar = $words[1];
+                }
+                $this->_properties['Widths']['value'][$lastChar] = $words[4];
+            }
+        }
+        $this->_properties['FirstChar']['value'] = $firstChar;
+        $this->_properties['LastChar']['value'] = $lastChar;
+    }
+    
     static public function defaultExtraction($line) {
         return $line[1];
     }
@@ -108,7 +131,6 @@ class EPDFFontNode extends EPDFNode {
     }
 
     static public function defaultFallback($properties, $property) {
-        var_dump($properties);
         EPDFNode::generateFatalError("Font parsing: No fallback appropriate function to compute " . $property . " value.\n");
     }
 
@@ -127,10 +149,20 @@ class EPDFFontNode extends EPDFNode {
         return 0;
     }
 
+    /**
+     * Todo: upgrade flag computation.
+     */
     static public function flagFallback($properties, $property) {
-        /*$flags = 0;
-        if(isset($properties['IsFixedPitch']['value']) && $properties['IsFixedPitch']['value'])
-            $flags += 1<<0;*/
+        $flags = 0;
+	if ($properties['IsFixedPitch']) {
+            $flags += 1 << 0;
+        }
+        // not symbolic
+        $flags += 1 << 5;
+	if ($properties['ItalicAngle']) {
+		$flags += 1 << 6;
+        }
+        return $flags;
     }
 }
 
