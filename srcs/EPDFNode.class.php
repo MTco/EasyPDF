@@ -48,6 +48,10 @@ class EPDFNode {
         $this->_parent = $parent;
         $this->_childs = array();
     }
+    
+    static public function  createEmptyNode(EPDFEngine $engine, $parent = null) {
+        return new EPDFNode($engine, $engine->getSingleIndex(), 0, $parent);
+    }
 
     public function getIndex() {
         return $this->_index;

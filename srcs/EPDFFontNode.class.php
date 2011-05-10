@@ -36,6 +36,19 @@ class EPDFFontNode extends EPDFNode {
         $this->parseMetricsFile();
     }
     
+    public function output(&$pdf) {
+        parent::preOutput($pdf);
+        $this->data($pdf);
+        parent::output($pdf);
+    }
+    
+    private function data(&$pdf) {
+        parent::writeObjHeader($pdf);
+        
+        
+        parent::writeObjFooter($pdf);
+    }
+    
     private function populateMetricsData() {
         $this->generateMetricsFile();
     }

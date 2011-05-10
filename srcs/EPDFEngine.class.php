@@ -58,6 +58,10 @@ class EPDFEngine {
         $this->_fonts[$singleReference] = new EPDFFontNode($this, $filename, $type);
     }
     
+    public function getFonts() {
+        return $this->_fonts;
+    }
+    
     public function getUnit() {
         return $this->_unit;
     }
@@ -106,6 +110,10 @@ class EPDFEngine {
 
     public function getRootNode() {
         return $this->_rootNode;
+    }
+    
+    public function attachFontToPage($fontnameReference, EPDFPageNode &$pageReference) {
+        $pageReference->addFontResource($fontnameReference);
     }
 
     public function addPage(EPDFPageNode $page) {
