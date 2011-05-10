@@ -165,5 +165,3 @@ class EPDFFontNode extends EPDFNode {
         return $flags;
     }
 }
-
-?>

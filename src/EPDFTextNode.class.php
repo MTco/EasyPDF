@@ -41,5 +41,3 @@ class EPDFTextNode extends EPDFNode {
     }
     
 }
-
-?>

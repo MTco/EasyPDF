@@ -66,5 +66,3 @@ class EPDFRootNode extends EPDFNode {
     }
 
 }
-
-?>

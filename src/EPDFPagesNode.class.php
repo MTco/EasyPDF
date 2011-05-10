@@ -54,5 +54,3 @@ class EPDFPagesNode extends EPDFNode {
     }
     
 }
-
-?>

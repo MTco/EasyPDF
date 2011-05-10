@@ -8,7 +8,7 @@ ini_set('error_reporting', E_ALL);
 error_reporting(E_ALL);
 
 
-include_once '../srcs/EPDFEngine.class.php';
+include_once '../src/EPDFEngine.class.php';
 
 function test1() {
     $pdf = new EPDFEngine();
@@ -25,4 +25,3 @@ function test1() {
 
 test1();
 
-?>
