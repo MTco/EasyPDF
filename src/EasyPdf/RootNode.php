@@ -1,25 +1,23 @@
 <?php
 
+namespace EasyPdf;
 /**
  * PHP-class for writting PDF.
  *
  * @author greg
  */
 
-include_once 'EPDFNode.class.php';
-include_once 'EPDFPagesNode.class.php';
-
-class EPDFRootNode extends EPDFNode {
+class RootNode extends Node {
 
     /**
      * Reference to pages node.
      */
     private $_pagesNode;
 
-    public function EPDFRootNode(EPDFEngine &$engine, $index, $generation = 0, $parent = null) {
-        parent::EPDFNode($engine, $index, $generation, $parent);
+    public function RootNode(Engine &$engine, $index, $generation = 0, $parent = null) {
+        parent::Node($engine, $index, $generation, $parent);
         
-        $this->_pagesNode = new EPDFPagesNode($engine, $index + 1, $generation, $this);
+        $this->_pagesNode = new PagesNode($engine, $index + 1, $generation, $this);
         $this->_childs[] = $this->_pagesNode;
     }
 

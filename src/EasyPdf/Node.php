@@ -1,12 +1,13 @@
 <?php
 
+namespace EasyPdf;
 /**
  * PHP-class for writting PDF.
  *
  * @author greg
  */
 
-class EPDFNode {
+class Node {
 
     /**
      * Index number.
@@ -19,7 +20,7 @@ class EPDFNode {
      protected $_generation;
 
     /**
-     * Parent EPDF Node relative to this node instance.
+     * Parent  Node relative to this node instance.
      */
     protected $_parent;
 
@@ -34,14 +35,14 @@ class EPDFNode {
     protected $_offset;
 
     /**
-     * Reference to EPDFEngine instance.
+     * Reference to Engine instance.
      */
     protected $_engine;
 
     /**
      * Default constructor, initialize default members states.
      */
-    public function EPDFNode(EPDFEngine $engine, $index, $generation = 0, $parent = null) {
+    public function Node(Engine $engine, $index, $generation = 0, $parent = null) {
         $this->_engine = $engine;
         $this->_index = $index;
         $this->_generation = $generation;
@@ -95,7 +96,7 @@ class EPDFNode {
     }
 
     protected function generateFatalError($error) {
-        EPDFNode::staticGenerateFatalError($error);
+        Node::staticGenerateFatalError($error);
     }
 
     static protected function staticGenerateFatalError($error) {

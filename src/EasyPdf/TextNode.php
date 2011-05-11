@@ -1,23 +1,22 @@
 <?php
 
+namespace EasyPdf;
 /**
  * PHP-class for writting PDF.
  *
  * @author greg
  */
 
-include_once 'EPDFNode.class.php';
-
-class EPDFTextNode extends EPDFNode {
+class TextNode extends Node {
     
     /**
      * Text content.
      */
     private $_text;
     
-    public function EPDFTextNode(EPDFPageNode &$page, $text = '') {
+    public function TextNode(PageNode &$page, $text = '') {
         $engine = $page->getEngine();
-        parent::EPDFNode($engine, $engine->getSingleIndex(), $page->getGeneration(), $page);
+        parent::Node($engine, $engine->getSingleIndex(), $page->getGeneration(), $page);
         
         $this->_text = gzdeflate($text);
     }

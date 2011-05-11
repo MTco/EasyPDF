@@ -1,14 +1,13 @@
 <?php
 
+namespace EasyPdf;
 /**
  * PHP-class for writting PDF.
  *
  * @author greg
  */
 
-include_once 'EPDFNode.class.php';
-
-class EPDFFontNode extends EPDFNode {
+class FontNode extends Node {
 
     /**
      * Path to font file.
@@ -26,9 +25,9 @@ class EPDFFontNode extends EPDFNode {
     private $_type;
 
     
-    public function EPDFFontNode(EPDFEngine &$pdf, $filename, $type) {
+    public function FontNode(Engine &$pdf, $filename, $type) {
         $parent = $pdf->getRootNode();
-        parent::EPDFNode($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
+        parent::Node($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
 
         $this->_filename = $filename;
         $this->_type = $type;
@@ -87,7 +86,7 @@ class EPDFFontNode extends EPDFNode {
         for ($i = 0; $i < $cc; ++$i) {
             $words = explode(" ", $lines[$i]);
             if (array_key_exists($words[0], $this->_properties)) {
-                $this->_properties[$words[0]]['value'] = call_user_func(__NAMESPACE__ .'\EPDFFontNode::' . $this->_properties[$words[0]]['parsing'], $words);
+                $this->_properties[$words[0]]['value'] = call_user_func(__NAMESPACE__ .'\FontNode::' . $this->_properties[$words[0]]['parsing'], $words);
             }
         }
         
@@ -95,7 +94,7 @@ class EPDFFontNode extends EPDFNode {
         //fallback call
         foreach ($this->_properties as $key => $value) {
             if (!$value['value']) {
-                $this->_properties[$key]['value'] = call_user_func(__NAMESPACE__ .'\EPDFFontNode::' . $value['fallback'], $this->_properties, $key);
+                $this->_properties[$key]['value'] = call_user_func(__NAMESPACE__ .'\FontNode::' . $value['fallback'], $this->_properties, $key);
             }
         }
     }
@@ -131,7 +130,7 @@ class EPDFFontNode extends EPDFNode {
     }
 
     static public function defaultFallback($properties, $property) {
-        EPDFNode::generateFatalError("Font parsing: No fallback appropriate function to compute " . $property . " value.\n");
+        Node::generateFatalError("Font parsing: No fallback appropriate function to compute " . $property . " value.\n");
     }
 
     static public function capHeightFallback($properties, $property) {

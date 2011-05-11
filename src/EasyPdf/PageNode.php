@@ -1,16 +1,13 @@
 <?php
 
+namespace EasyPdf;
 /**
  * PHP-class for writting PDF.
  *
  * @author greg
  */
 
-include_once 'EPDFNode.class.php';
-include_once 'EPDFPagesNode.class.php';
-include_once 'EPDFTextNode.class.php';
-
-class EPDFPageNode extends EPDFNode {
+class PageNode extends Node {
 
     /**
      * Media box of the page.
@@ -22,16 +19,16 @@ class EPDFPageNode extends EPDFNode {
      */
     private $_content;
 
-    public function EPDFPageNode(EPDFEngine &$pdf, $mediaBox = null) {
+    public function PageNode(Engine &$pdf, $mediaBox = null) {
         $parent = $pdf->getRootNode()->getPagesNode();
-        parent::EPDFNode($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
+        parent::Node($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
 
         $this->_content = array();
         $this->setFormat($mediaBox);
     }
 
     public function addText($textUser) {
-        $text = new EPDFTextNode($this, $textUser);
+        $text = new TextNode($this, $textUser);
         $this->_content[] = $text;
         $this->_childs[] = $text;
         $text->setParent($this);

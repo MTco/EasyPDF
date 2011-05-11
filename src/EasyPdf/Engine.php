@@ -1,15 +1,13 @@
 <?php
 
+namespace EasyPdf;
 /**
  * PHP-class for writting PDF.
  *
  * @author greg
  */
 
-include_once 'EPDFRootNode.class.php';
-include_once 'EPDFFontNode.class.php';
-
-class EPDFEngine {
+class Engine {
 
     /**
      * Root node containing all pdf.
@@ -41,10 +39,10 @@ class EPDFEngine {
      */
     private $_fonts;
 
-    public function EPDFEngine() {
+    public function Engine() {
         $this->_startIndex = 1;
         $this->_currentIndex = $this->_startIndex;
-        $this->_rootNode = new EPDFRootNode($this, $this->_currentIndex++, 0, $this);
+        $this->_rootNode = new RootNode($this, $this->_currentIndex++, 0, $this);
         $this->setUnit('pt');
     }
     
@@ -55,7 +53,7 @@ class EPDFEngine {
         if (isset($this->_fonts[$singleReference])) {
             return;
         }
-        $this->_fonts[$singleReference] = new EPDFFontNode($this, $filename, $type);
+        $this->_fonts[$singleReference] = new FontNode($this, $filename, $type);
     }
     
     public function getUnit() {
@@ -95,12 +93,12 @@ class EPDFEngine {
         return ++$this->_currentIndex;
     }
 
-    public function writePDF($filename = 'output.pdf') {
+    public function write($filename = 'output.pdf') {
         $pdf;
         $this->_rootNode->output($pdf);
         
         if (!file_put_contents($filename, $pdf)) {
-            throw new Exception('Cannot save PDF file to ' . $filename);
+            throw new \Exception('Cannot save PDF file to ' . $filename);
         }
     }
 
@@ -108,7 +106,7 @@ class EPDFEngine {
         return $this->_rootNode;
     }
 
-    public function addPage(EPDFPageNode $page) {
+    public function addPage(PageNode $page) {
         $this->_rootNode->getPagesNode()->addPage($page);
     }
 
