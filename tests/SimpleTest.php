@@ -11,9 +11,11 @@ ini_set('display_errors','On');
 include_once '../src/EPDFEngine.class.php';
 
 function test1() {
+    $startTime = microtime(true);
+    
     $pdf = new EPDFEngine();
     $pdf->setUnit('mm');
-    $fontDeOuf = $pdf->addFont('../tests/Chicken Butt.ttf', 'ma font de ouf');
+    $fontDeOuf = $pdf->addFont('../tests/Chicken Butt.ttf', 'TrueType', 'ma font de ouf');
     
     $page = new EPDFPageNode($pdf);
     $page->addFontResource($fontDeOuf);
@@ -22,7 +24,13 @@ function test1() {
     
     $pdf->addPage($page);
     $pdf->writePDF();
+    
+    $downIn = microtime(true) - $startTime;
+    
+    echo "Done in " . $downIn . " secondes.\n";
+    
 }
+
 test1();
 
 ?>

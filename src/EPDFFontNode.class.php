@@ -7,6 +7,7 @@
  */
 
 include_once 'EPDFNode.class.php';
+include_once 'EPDFFontWidthsNode.class.php';
 
 class EPDFFontNode extends EPDFNode {
 
@@ -24,6 +25,11 @@ class EPDFFontNode extends EPDFNode {
      * Type of font (ttf...)
      */
     private $_type;
+    
+    /**
+     * Widths info.
+     */
+    private $_widths;
 
     
     public function EPDFFontNode(EPDFEngine &$pdf, $filename, $type) {
@@ -32,6 +38,8 @@ class EPDFFontNode extends EPDFNode {
 
         $this->_filename = $filename;
         $this->_type = $type;
+        $this->_widths = new EPDFFontWidthsNode($pdf, $this);
+        $this->_childs[] = $this->_widths;
         $this->populateMetricsData();
         $this->parseMetricsFile();
     }
@@ -58,7 +66,7 @@ class EPDFFontNode extends EPDFNode {
         $pdf .= "/BaseFont /" . $this->_properties['FontName']['value'] . "\n";
         $pdf .= "/Subtype /" . $this->_type . "\n";
         $pdf .= "/FirstChar " . $this->_properties['FirstChar']['value'] . " " . "/LastChar " . $this->_properties['LastChar']['value'] . "\n";
-        //width
+        $pdf .= "/Widths " . $this->_widths->getIndirectReference() . "\n";
         //fontdescriptor
         $pdf .= "/Encoding /WinAnsiEncoding\n";
         $pdf .= ">>\n";
@@ -105,7 +113,6 @@ class EPDFFontNode extends EPDFNode {
         $this->_properties['IsFixedPitch']['value'] = null;  $this->_properties['IsFixedPitch']['parsing'] = 'defaultExtraction';   $this->_properties['IsFixedPitch']['fallback'] = 'defaultFallback';
         $this->_properties['Flags']['value'] = null;         $this->_properties['Flags']['parsing'] = 'defaultExtraction';          $this->_properties['Flags']['fallback'] = 'flagFallback';
 
-
     }
 
     private function parseMetricsFile() {
@@ -150,6 +157,8 @@ class EPDFFontNode extends EPDFNode {
         }
         $this->_properties['FirstChar']['value'] = $firstChar;
         $this->_properties['LastChar']['value'] = $lastChar;
+        //set widths object
+        $this->_widths->setData($this->_properties['Widths']['value']);
     }
     
     static public function defaultExtraction($line) {
