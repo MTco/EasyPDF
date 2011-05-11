@@ -93,7 +93,7 @@ class Engine {
         return ++$this->_currentIndex;
     }
 
-    public function write($filename = 'output.pdf') {
+    public function writePDF($filename = 'output.pdf') {
         $pdf;
         $this->_rootNode->output($pdf);
         
