@@ -28,11 +28,6 @@ class EPDFPageNode extends EPDFNode {
      */
     private $_resourceNode;
     
-    /**
-     * Page fonts name.
-     */
-    private $_fonts;
-    
     public function EPDFPageNode(EPDFEngine &$pdf, $mediaBox = null) {
         $parent = $pdf->getRootNode()->getPagesNode();
         parent::EPDFNode($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
@@ -40,10 +35,11 @@ class EPDFPageNode extends EPDFNode {
         $this->_content = array();
         $this->setFormat($mediaBox);
         $this->_resourceNode = new EPDFResourcesNode($pdf, $this);
+        $this->_childs[] = $this->_resourceNode;
     }
     
-    public function addFontResource($fontname) {
-        $this->_fonts[$fontname] = true;
+    public function addFontResource(EPDFFontNode $font) {
+        $this->_resourceNode->addFont($font);
     }
 
     public function addText($textUser) {
@@ -95,7 +91,7 @@ class EPDFPageNode extends EPDFNode {
         $content = $this->_content[0]; //tmp
         $pdf .= "/Contents " . $content->getIndirectReference() . "\n";
     }
-
+    
 }
 
 ?>

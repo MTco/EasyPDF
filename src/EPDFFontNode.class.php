@@ -44,7 +44,24 @@ class EPDFFontNode extends EPDFNode {
     
     private function data(&$pdf) {
         parent::writeObjHeader($pdf);
-        
+/*
+        <</Type /Font
+        /BaseFont /Calligrapher-Regular
+        /Subtype /TrueType
+        /FirstChar 32 /LastChar 255
+        /Widths 7 0 R
+        /FontDescriptor 8 0 R
+        /Encoding /WinAnsiEncoding
+        >>
+*/
+        $pdf .= "<< /Type /Font\n";
+        $pdf .= "/BaseFont /" . $this->_properties['FontName']['value'] . "\n";
+        $pdf .= "/Subtype /" . $this->_type . "\n";
+        $pdf .= "/FirstChar " . $this->_properties['FirstChar']['value'] . " " . "/LastChar " . $this->_properties['LastChar']['value'] . "\n";
+        //width
+        //fontdescriptor
+        $pdf .= "/Encoding /WinAnsiEncoding\n";
+        $pdf .= ">>\n";
         
         parent::writeObjFooter($pdf);
     }

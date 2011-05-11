@@ -53,9 +53,11 @@ class EPDFEngine {
             $singleReference = $filename;
         }
         if (isset($this->_fonts[$singleReference])) {
-            return;
+            return $this->_fonts[$singleReference];
         }
         $this->_fonts[$singleReference] = new EPDFFontNode($this, $filename, $type);
+        
+        return $this->_fonts[$singleReference];
     }
     
     public function getFonts() {
