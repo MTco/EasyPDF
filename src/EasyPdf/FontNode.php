@@ -29,6 +29,10 @@ class FontNode extends Node {
      */
     private $_widths;
 
+    /**
+     * Font descriptor.
+     */
+    private $_fontDescriptor;
     
     public function __construct(Engine &$pdf, $filename, $type) {
         $parent = $pdf->getRootNode();
@@ -38,6 +42,8 @@ class FontNode extends Node {
         $this->_type = $type;
         $this->_widths = new \EasyPdf\FontWidthsNode($pdf, $this);
         $this->_childs[] = $this->_widths;
+        $this->_fontDescriptor = new \EasyPdf\FontDescriptor($pdf, $this);
+        $this->_childs[] = $this->_fontDescriptor;
         $this->populateMetricsData();
         $this->parseMetricsFile();
     }
@@ -65,11 +71,15 @@ class FontNode extends Node {
         $pdf .= "/Subtype /" . $this->_type . "\n";
         $pdf .= "/FirstChar " . $this->_properties['FirstChar']['value'] . " " . "/LastChar " . $this->_properties['LastChar']['value'] . "\n";
         $pdf .= "/Widths " . $this->_widths->getIndirectReference() . "\n";
-        //fontdescriptor
+        $pdf .= "/FontDescriptor " . $this->_fontDescriptor->getIndirectReference() . "\n";
         $pdf .= "/Encoding /WinAnsiEncoding\n";
         $pdf .= ">>\n";
         
         parent::writeObjFooter($pdf);
+    }
+    
+    public function getProperties() {
+        return $this->_properties;
     }
     
     private function populateMetricsData() {

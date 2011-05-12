@@ -42,7 +42,7 @@ class PagesNode extends Node {
         $pdf .= "<< /Type /Pages\n";
         $pdf .= "/Kids [";
         foreach ($this->_pageNodes as $page) {
-            $pdf .= $page->getIndirectReference() . "\n";
+            $pdf .= $page->getIndirectReference() . " ";
         }
         $pdf .= "]\n";
         $pdf .= "/Count " . count($this->_pageNodes) . "\n";
