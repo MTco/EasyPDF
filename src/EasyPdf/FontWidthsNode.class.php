@@ -1,17 +1,18 @@
 <?php
 
+namespace EasyPdf;
 /**
  * PHP-class for writting PDF.
  *
  * @author greg
  */
 
-class EPDFFontWidthsNode extends EPDFNode {
+class FontWidthsNode extends Node {
     
     private $_data;
     
-    public function EPDFFontWidthsNode(EPDFEngine &$pdf, EPDFFontNode &$font) {
-        parent::EPDFNode($pdf, $pdf->getSingleIndex(), 0, $font);
+    public function FontWidthsNode(Engine &$pdf, FontNode &$font) {
+        parent::Node($pdf, $pdf->getSingleIndex(), 0, $font);
     }
     
     public function setData($data) {

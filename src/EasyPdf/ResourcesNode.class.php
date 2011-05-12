@@ -1,20 +1,21 @@
 <?php
 
+namespace EasyPdf;
 /**
  * PHP-class for writting PDF.
  *
  * @author greg
  */
 
-class EPDFResourcesNode extends EPDFNode {
+class ResourcesNode extends Node {
     
     /**
      * Font resources.
      */
     private $_fonts;
     
-    public function EPDFResourcesNode(EPDFEngine &$pdf, EPDFPageNode &$page) {
-        parent::EPDFNode($pdf, $pdf->getSingleIndex(), 0, $page);
+    public function ResourcesNode(Engine &$pdf, PageNode &$page) {
+        parent::Node($pdf, $pdf->getSingleIndex(), 0, $page);
     }
     
     public function output(&$pdf) {
@@ -38,7 +39,7 @@ class EPDFResourcesNode extends EPDFNode {
         parent::writeObjFooter($pdf);
     }
     
-    public function addFont(EPDFFontNode $font) {
+    public function addFont(FontNode $font) {
         $this->_fonts[] = $font;
         $this->_childs[] = $font;
     }
