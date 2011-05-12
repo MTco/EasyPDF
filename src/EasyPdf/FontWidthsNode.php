@@ -11,8 +11,8 @@ class FontWidthsNode extends Node {
     
     private $_data;
     
-    public function FontWidthsNode(Engine &$pdf, FontNode &$font) {
-        parent::Node($pdf, $pdf->getSingleIndex(), 0, $font);
+    public function __construct(Engine &$pdf, FontNode &$font) {
+        parent::__construct($pdf, $pdf->getSingleIndex(), 0, $font);
     }
     
     public function setData($data) {

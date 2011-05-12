@@ -14,8 +14,8 @@ class PagesNode extends Node {
      */
     private $_pageNodes;
 
-    public function PagesNode(Engine &$engine, $index, $generation = 0, $parent = null) {
-        parent::Node($engine, $index, $generation, $parent);
+    public function __construct(Engine &$engine, $index, $generation = 0, $parent = null) {
+        parent::__construct($engine, $index, $generation, $parent);
 
         $this->_pageNodes = array();
     }

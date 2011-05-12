@@ -42,7 +42,7 @@ class Node {
     /**
      * Default constructor, initialize default members states.
      */
-    public function Node(Engine $engine, $index, $generation = 0, $parent = null) {
+    public function __construct(Engine $engine, $index, $generation = 0, $parent = null) {
         $this->_engine = $engine;
         $this->_index = $index;
         $this->_generation = $generation;

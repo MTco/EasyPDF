@@ -14,8 +14,8 @@ class ResourcesNode extends Node {
      */
     private $_fonts;
     
-    public function ResourcesNode(Engine &$pdf, PageNode &$page) {
-        parent::Node($pdf, $pdf->getSingleIndex(), 0, $page);
+    public function __construct(Engine &$pdf, PageNode &$page) {
+        parent::__construct($pdf, $pdf->getSingleIndex(), 0, $page);
     }
     
     public function output(&$pdf) {

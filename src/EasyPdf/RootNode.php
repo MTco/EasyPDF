@@ -14,8 +14,8 @@ class RootNode extends Node {
      */
     private $_pagesNode;
 
-    public function RootNode(Engine &$engine, $index, $generation = 0, $parent = null) {
-        parent::Node($engine, $index, $generation, $parent);
+    public function __construct(Engine &$engine, $index, $generation = 0, $parent = null) {
+        parent::__construct($engine, $index, $generation, $parent);
         
         $this->_pagesNode = new PagesNode($engine, $index + 1, $generation, $this);
         $this->_childs[] = $this->_pagesNode;

@@ -39,10 +39,10 @@ class Engine {
      */
     private $_fonts;
 
-    public function Engine() {
+    public function __construct() {
         $this->_startIndex = 1;
         $this->_currentIndex = $this->_startIndex;
-        $this->_rootNode = new RootNode($this, $this->_currentIndex++, 0, $this);
+        $this->_rootNode = new \EasyPdf\RootNode($this, $this->_currentIndex++, 0, $this);
         $this->setUnit('pt');
     }
     
@@ -51,9 +51,10 @@ class Engine {
             $singleReference = $filename;
         }
         if (isset($this->_fonts[$singleReference])) {
-            return;
+            return $this->_fonts[$singleReference];
         }
         $this->_fonts[$singleReference] = new FontNode($this, $filename, $type);
+        return $this->_fonts[$singleReference];
     }
     
     public function getUnit() {

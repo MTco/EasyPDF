@@ -25,9 +25,9 @@ class PageNode extends Node {
      */
     private $_resourceNode;
     
-    public function PageNode(EPDFEngine &$pdf, $mediaBox = null) {
+    public function __construct(Engine &$pdf, $mediaBox = null) {
         $parent = $pdf->getRootNode()->getPagesNode();
-        parent::Node($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
+        parent::__construct($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
 
         $this->_content = array();
         $this->setFormat($mediaBox);
@@ -35,12 +35,12 @@ class PageNode extends Node {
         $this->_childs[] = $this->_resourceNode;
     }
     
-    public function addFontResource(EPDFFontNode $font) {
+    public function addFontResource(FontNode $font) {
         $this->_resourceNode->addFont($font);
     }
 
     public function addText($textUser) {
-        $text = new EPDFTextNode($this, $textUser);
+        $text = new TextNode($this, $textUser);
         $this->_content[] = $text;
         $this->_childs[] = $text;
         $text->setParent($this);

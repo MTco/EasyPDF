@@ -14,9 +14,9 @@ class TextNode extends Node {
      */
     private $_text;
     
-    public function TextNode(PageNode &$page, $text = '') {
+    public function __construct(PageNode &$page, $text = '') {
         $engine = $page->getEngine();
-        parent::Node($engine, $engine->getSingleIndex(), $page->getGeneration(), $page);
+        parent::__construct($engine, $engine->getSingleIndex(), $page->getGeneration(), $page);
         
         $this->_text = gzdeflate($text);
     }

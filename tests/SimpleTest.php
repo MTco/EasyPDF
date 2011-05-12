@@ -18,7 +18,6 @@ function test1() {
     $pdf = new EasyPdf\Engine();
     $pdf->setUnit('mm');
     $fontDeOuf = $pdf->addFont('../tests/Chicken Butt.ttf', 'TrueType', 'ma font de ouf');
-    
     $page = new EasyPdf\PageNode($pdf);
     $page->addFontResource($fontDeOuf);
 

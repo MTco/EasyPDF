@@ -30,13 +30,13 @@ class FontNode extends Node {
     private $_widths;
 
     
-    public function FontNode(EPDFEngine &$pdf, $filename, $type) {
+    public function __construct(Engine &$pdf, $filename, $type) {
         $parent = $pdf->getRootNode();
-        parent::Node($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
+        parent::__construct($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
 
         $this->_filename = $filename;
         $this->_type = $type;
-        $this->_widths = new \FontWidthsNode($pdf, $this);
+        $this->_widths = new \EasyPdf\FontWidthsNode($pdf, $this);
         $this->_childs[] = $this->_widths;
         $this->populateMetricsData();
         $this->parseMetricsFile();
@@ -79,7 +79,7 @@ class FontNode extends Node {
     private function generateMetricsFile() {
         if (file_exists("../utils/ttf2pt1_" . PHP_OS . ".exe")) {
             $olddir = getcwd();
-            chdir(__DIR__ . "/../utils");
+            chdir(__DIR__ . "/../../utils");
             $hack = preg_match("#WIN#", PHP_OS) ? '' : './';
             $cmd = $hack . "ttf2pt1_" . PHP_OS . ".exe -a \"" . $this->_filename . "\" \"../tmp/" . basename($this->_filename) . "\" 2> ../tmp/log";
             shell_exec($cmd);
@@ -122,7 +122,7 @@ class FontNode extends Node {
         for ($i = 0; $i < $cc; ++$i) {
             $words = explode(" ", $lines[$i]);
             if (array_key_exists($words[0], $this->_properties)) {
-                $this->_properties[$words[0]]['value'] = call_user_func(__NAMESPACE__ .'\EPDFFontNode::' . $this->_properties[$words[0]]['parsing'], $words);
+                $this->_properties[$words[0]]['value'] = call_user_func(__NAMESPACE__ .'\FontNode::' . $this->_properties[$words[0]]['parsing'], $words);
             }
         }
         
@@ -130,7 +130,7 @@ class FontNode extends Node {
         //fallback call
         foreach ($this->_properties as $key => $value) {
             if (!$value['value']) {
-                $this->_properties[$key]['value'] = call_user_func(__NAMESPACE__ .'\EPDFFontNode::' . $value['fallback'], $this->_properties, $key);
+                $this->_properties[$key]['value'] = call_user_func(__NAMESPACE__ .'\FontNode::' . $value['fallback'], $this->_properties, $key);
             }
         }
     }
@@ -168,7 +168,7 @@ class FontNode extends Node {
     }
 
     static public function defaultFallback($properties, $property) {
-        EPDFNode::generateFatalError("Font parsing: No fallback appropriate function to compute " . $property . " value.\n");
+        Node::generateFatalError("Font parsing: No fallback appropriate function to compute " . $property . " value.\n");
     }
 
     static public function capHeightFallback($properties, $property) {
