@@ -97,14 +97,7 @@ class Node {
             $child->output($pdf);
         }
     }
-/*
-    public function crossReferenceMe(&$pdf) {
-        $pdf .= sprintf("%010s %05s n\n", $this->_offset, $this->_generation);
-        foreach ($this->_childs as $c) {
-            $c->crossReferenceMe($pdf);
-        }
-    }
-*/
+
     protected function generateFatalError($error) {
         Node::staticGenerateFatalError($error);
     }

@@ -33,7 +33,8 @@ class FontNode extends Node {
      * Font descriptor.
      */
     private $_fontDescriptor;
-    
+
+
     public function __construct(Engine &$pdf, $filename, $type) {
         $parent = $pdf->getRootNode();
         parent::__construct($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
@@ -44,8 +45,17 @@ class FontNode extends Node {
         $this->addChild($this->_widths);
         $this->_fontDescriptor = new \EasyPdf\FontDescriptor($pdf, $this);
         $this->addChild($this->_fontDescriptor);
+
         $this->populateMetricsData();
         $this->parseMetricsFile();
+    }
+
+    public function getType() {
+        return $this->_type;
+    }
+
+    public function getFilename() {
+        return $this->_filename;
     }
     
     public function output(&$pdf) {
@@ -56,16 +66,7 @@ class FontNode extends Node {
     
     private function data(&$pdf) {
         parent::writeObjHeader($pdf);
-/*
-        <</Type /Font
-        /BaseFont /Calligrapher-Regular
-        /Subtype /TrueType
-        /FirstChar 32 /LastChar 255
-        /Widths 7 0 R
-        /FontDescriptor 8 0 R
-        /Encoding /WinAnsiEncoding
-        >>
-*/
+
         $pdf .= "<< /Type /Font\n";
         $pdf .= "/BaseFont /" . $this->_properties['FontName']['value'] . "\n";
         $pdf .= "/Subtype /" . $this->_type . "\n";

@@ -41,25 +41,5 @@ class RootNode extends Node {
 
         parent::writeObjFooter($pdf);
     }
-/*
-    private function crossReference(&$pdf) {
-        $startXref = strlen($pdf);
-        $pdf .= "xref\n";
 
-        $startIdx = $this->_parent->getStartIndex() - 1;
-        $currentIdx = $this->_parent->getCurrentIndex() + 1;
-        $pdf .= $startIdx . " " . $currentIdx . "\n";
-        $pdf .= "0000000000 65535 f\n";
-
-        $this->crossReferenceMe($pdf);
-
-        $pdf .= "\ntrailer\n";
-        $pdf .= "<< /Size " . $currentIdx . "\n";
-        $pdf .= "/Root " . $this->getIndirectReference() . "\n";
-        $pdf .= ">>\n";
-        $pdf .= "startxref\n";
-        $pdf .= $startXref . "\n";
-        $pdf .= "%%EOF\n";
-    }
-*/
 }

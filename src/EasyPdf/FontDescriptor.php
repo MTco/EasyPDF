@@ -8,12 +8,31 @@ namespace EasyPdf;
  */
 
 class FontDescriptor extends \EasyPdf\Node {
-    
+
+    /**
+     * Font Node.
+     */
     private $_fontNode;
+
+    /**
+     * Font file data.
+     */
+    private $_fontFile;
     
     public function __construct(Engine &$pdf, FontNode $font) {
         parent::__construct($pdf, $pdf->getSingleIndex(), $font->getGeneration(), $font);
         $this->_fontNode = $font;
+
+        if ($font->getType() == "TrueType") {
+            $this->_fontFile = new FontFileTTNode($pdf, $this);
+            $this->addChild($this->_fontFile);
+        } else {
+            $this->generateFatalError("Only TrueType font is supported for the moment.");
+        }
+    }
+
+    public function getFontNode() {
+        return $this->_fontNode;
     }
     
     public function setFont(FontNode $font) {
@@ -39,7 +58,12 @@ class FontDescriptor extends \EasyPdf\Node {
         $pdf .= "/FontBBox [" . $properties['FontBBox']['value'][0] . " " . $properties['FontBBox']['value'][1] . " " . $properties['FontBBox']['value'][2] . " " . (int)$properties['FontBBox']['value'][3] . "]\n";
         $pdf .= "/ItalicAngle " . $properties['ItalicAngle']['value'] . "\n";
         $pdf .= "/StemV " . $properties['StdVW']['value'] . "\n";
-        $pdf .= "/MissingWidth " . $properties['MissingWidth']['value'] . "\n"; 
+        $pdf .= "/MissingWidth " . $properties['MissingWidth']['value'] . "\n";
+
+        if ($this->_fontNode->getType() == "TrueType") {
+            $pdf .= "/FontFile2 " . $this->_fontFile->getIndirectReference() . "\n";
+        }
+
         $pdf .= ">>\n";
         
         
