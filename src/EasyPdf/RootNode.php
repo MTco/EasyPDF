@@ -18,7 +18,7 @@ class RootNode extends Node {
         parent::__construct($engine, $index, $generation, $parent);
         
         $this->_pagesNode = new PagesNode($engine, $index + 1, $generation, $this);
-        $this->_childs[] = $this->_pagesNode;
+        $this->addChild($this->_pagesNode);
     }
 
     public function getPagesNode() {
@@ -28,7 +28,6 @@ class RootNode extends Node {
     public function output(&$pdf) {
         $this->header($pdf);
         parent::output($pdf);
-        $this->crossReference($pdf);
     }
 
     private function header(&$pdf) {
@@ -42,7 +41,7 @@ class RootNode extends Node {
 
         parent::writeObjFooter($pdf);
     }
-
+/*
     private function crossReference(&$pdf) {
         $startXref = strlen($pdf);
         $pdf .= "xref\n";
@@ -62,5 +61,5 @@ class RootNode extends Node {
         $pdf .= $startXref . "\n";
         $pdf .= "%%EOF\n";
     }
-
+*/
 }

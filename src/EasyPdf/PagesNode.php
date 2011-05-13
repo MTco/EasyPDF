@@ -28,7 +28,7 @@ class PagesNode extends Node {
 
     public function addPage(PageNode $page) {
         $this->_pageNodes[] = $page;
-        $this->_childs[] = $page;
+        $this->addChild($page);
         $page->setParent($this);
     }
 

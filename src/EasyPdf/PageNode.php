@@ -32,7 +32,7 @@ class PageNode extends Node {
         $this->_content = array();
         $this->setFormat($mediaBox);
         $this->_resourceNode = new ResourcesNode($pdf, $this);
-        $this->_childs[] = $this->_resourceNode;
+        $this->addChild($this->_resourceNode);
     }
     
     public function addFontResource(FontNode $font) {
@@ -42,7 +42,7 @@ class PageNode extends Node {
     public function addText($textUser) {
         $text = new TextNode($this, $textUser);
         $this->_content[] = $text;
-        $this->_childs[] = $text;
+        $this->addChild($text);
         $text->setParent($this);
     }
     

@@ -41,7 +41,7 @@ class ResourcesNode extends Node {
     
     public function addFont(FontNode $font) {
         $this->_fonts[] = $font;
-        $this->_childs[] = $font;
+        $this->addChild($font);
     }
     
 }

@@ -39,10 +39,17 @@ class Engine {
      */
     private $_fonts;
 
+    /**
+     * Sorted child for cross reference table output.
+     */
+    private $_sortedChilds;
+
+
     public function __construct() {
         $this->_startIndex = 1;
         $this->_currentIndex = $this->_startIndex;
         $this->_rootNode = new \EasyPdf\RootNode($this, $this->_currentIndex++, 0, $this);
+        $this->_sortedChilds[$this->_rootNode->getIndex()] = $this->_rootNode;
         $this->setUnit('pt');
     }
     
@@ -56,7 +63,11 @@ class Engine {
         $this->_fonts[$singleReference] = new FontNode($this, $filename, $type);
         return $this->_fonts[$singleReference];
     }
-    
+
+    public function addSortedChild(Node $child) {
+        $this->_sortedChilds[$child->getIndex()] = $child;
+    }
+
     public function getUnit() {
         return $this->_unit;
     }
@@ -97,10 +108,34 @@ class Engine {
     public function writePDF($filename = 'output.pdf') {
         $pdf;
         $this->_rootNode->output($pdf);
-        
+        $this->crossReference($pdf);
+
         if (!file_put_contents($filename, $pdf)) {
             throw new \Exception('Cannot save PDF file to ' . $filename);
         }
+    }
+
+    private function crossReference(&$pdf) {
+        $startXref = strlen($pdf);
+        $pdf .= "xref\n";
+
+        $startIdx = $this->getStartIndex() - 1;
+        $currentIdx = $this->getCurrentIndex() + 1;
+        $pdf .= $startIdx . " " . $currentIdx . "\n";
+        $pdf .= "0000000000 65535 f\n";
+
+        ksort($this->_sortedChilds);
+        foreach ($this->_sortedChilds as $child) {
+            $pdf .= sprintf("%010s %05s n\n", $child->getOffset(), $child->getGeneration());
+        }
+
+        $pdf .= "\ntrailer\n";
+        $pdf .= "<< /Size " . $currentIdx . "\n";
+        $pdf .= "/Root " . $this->_rootNode->getIndirectReference() . "\n";
+        $pdf .= ">>\n";
+        $pdf .= "startxref\n";
+        $pdf .= $startXref . "\n";
+        $pdf .= "%%EOF\n";
     }
 
     public function getRootNode() {

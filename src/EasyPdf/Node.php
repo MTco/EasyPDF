@@ -53,7 +53,12 @@ class Node {
     public function getIndex() {
         return $this->_index;
     }
-    
+
+    public function addChild(Node $child) {
+        $this->_engine->addSortedChild($child);
+        $this->_childs[] = $child;
+    }
+
     public function getEngine() {
         return $this->_engine;
     }
@@ -65,6 +70,11 @@ class Node {
     public function getGeneration() {
         return $this->_generation;
     }
+
+    public function getOffset() {
+        return $this->_offset;
+    }
+
 
     protected function writeObjHeader(&$pdf) {
         $pdf .= $this->_index . " " . $this->_generation . " obj\n";
@@ -87,14 +97,14 @@ class Node {
             $child->output($pdf);
         }
     }
-
+/*
     public function crossReferenceMe(&$pdf) {
         $pdf .= sprintf("%010s %05s n\n", $this->_offset, $this->_generation);
         foreach ($this->_childs as $c) {
             $c->crossReferenceMe($pdf);
         }
     }
-
+*/
     protected function generateFatalError($error) {
         Node::staticGenerateFatalError($error);
     }

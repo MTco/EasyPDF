@@ -41,9 +41,9 @@ class FontNode extends Node {
         $this->_filename = $filename;
         $this->_type = $type;
         $this->_widths = new \EasyPdf\FontWidthsNode($pdf, $this);
-        $this->_childs[] = $this->_widths;
+        $this->addChild($this->_widths);
         $this->_fontDescriptor = new \EasyPdf\FontDescriptor($pdf, $this);
-        $this->_childs[] = $this->_fontDescriptor;
+        $this->addChild($this->_fontDescriptor);
         $this->populateMetricsData();
         $this->parseMetricsFile();
     }
