@@ -28,6 +28,7 @@ class ResourcesNode extends Node {
         parent::writeObjHeader($pdf);
         
         $pdf .= "<<\n";
+        $pdf .= "/ProcSet [/PDF /Text]\n";
         $pdf .= "/Font <<\n";
         
         for ($i = 0; $i < count($this->_fonts); ++$i) {
