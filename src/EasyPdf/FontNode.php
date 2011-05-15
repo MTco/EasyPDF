@@ -63,6 +63,9 @@ class FontNode extends Node {
     }
     
     public function output(&$pdf) {
+        if ($this->_writted) { // 1 time is enough.
+            return;
+        }
         parent::preOutput($pdf);
         $this->data($pdf);
         parent::output($pdf);

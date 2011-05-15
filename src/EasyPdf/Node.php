@@ -40,6 +40,11 @@ class Node {
     protected $_engine;
 
     /**
+     * Has been writted.
+     */
+    protected $_writted;
+
+    /**
      * Default constructor, initialize default members states.
      */
     public function __construct(Engine $engine, $index, $generation = 0, $parent = null) {
@@ -48,6 +53,7 @@ class Node {
         $this->_generation = $generation;
         $this->_parent = $parent;
         $this->_childs = array();
+        $this->_writted = false;
     }
 
     public function getIndex() {
@@ -93,6 +99,7 @@ class Node {
     }
 
     public function output(&$pdf) {
+        $this->_writted = true;
         foreach ($this->_childs as $child) {
             $child->output($pdf);
         }
