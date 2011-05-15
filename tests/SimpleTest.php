@@ -22,7 +22,7 @@ function test1() {
     $page->addFontResource($fontDeOuf);
 
     $page->setFormat(array(0, 0, 210, 297));
-    $page->addText("Hello World!", 0, 20);
+    $page->addText("Hello World!", 0, 10);
     
     $pdf->addPage($page);
     $pdf->writePDF();

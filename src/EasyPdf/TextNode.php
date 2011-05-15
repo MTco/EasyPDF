@@ -49,7 +49,7 @@ class TextNode extends Node {
         parent::writeObjHeader($pdf);
 
         $x = $this->_x * $this->_engine->getUnitFactor();
-        $y = ($this->_parent->getHeight() - $this->_y);// * $this->_engine->getUnitFactor();
+        $y = ($this->_parent->getHeight() - ($this->_y * $this->_engine->getUnitFactor()));// * $this->_engine->getUnitFactor();
 
         $stream = "BT\n";
         $stream .= "/F1 24 Tf\n";
