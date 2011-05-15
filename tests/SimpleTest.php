@@ -22,14 +22,13 @@ function test1() {
     $page->addFontResource($fontDeOuf);
 
     $page->setFormat(array(0, 0, 210, 297));
-    $page->addText("Hello World!", $fontDeOuf, 16, 0, 6);
 
-    $textArea = new EasyPdf\TextAreaNode($page, "LOL test wip wip wip wip");
-    $textArea->setWidth(100);
-    $textArea->setSize(40);
+    $textArea = new EasyPdf\TextAreaNode($page, file_get_contents("text"));
+    $textArea->setWidth(210);
+    $textArea->setSize(11);
     $textArea->setFont($fontDeOuf);
-    $textArea->setX(5);
-    $textArea->setY(50);
+    $textArea->setX(0);
+    $textArea->setY(10);
     $page->addTextArea($textArea);
     
     $pdf->addPage($page);

@@ -198,7 +198,7 @@ class FontNode extends Node {
     }
 
     static public function missingWidthFallback($properties, $property) {
-        return 0;
+        return 800;
     }
 
     /**

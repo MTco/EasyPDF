@@ -86,17 +86,27 @@ class TextAreaNode extends TextNode {
         $ret = array();
 	$s = (string)$s;
 	$cw = $this->_font->getWidths()->getData();
+        $missingWidth = $this->_font->getProperties();
+        $missingWidth = $missingWidth['MissingWidth']['value'];
 	$w = 0;
 	$l = strlen($s);
         $tmp = "";
 	for($i = 0; $i < $l; $i++) {
-            $tmp .= $s[$i];
-            $w += ($cw[ord($s[$i])] * $this->_size / 1000);
-            if ($w >= $this->_width * $this->_engine->getUnitFactor() || $s[$i] == '\n') {
+            $last = 0;
+            if (!isset($cw[ord($s[$i])])) {
+                $w += $missingWidth * $this->_size / 1000;
+                $last = $missingWidth * $this->_size / 1000;;
+            } else {
+                $w += ($cw[ord($s[$i])] * $this->_size / 1000);
+                $last = ($cw[ord($s[$i])] * $this->_size / 1000);
+            }
+            if ($w >= $this->_width * $this->_engine->getUnitFactor() || $s[$i] == "\n") {
                 $ret[] = $tmp;
                 $tmp = "";
-                $w = 0;
+                $w = $last;
             }
+            if ($s[$i] != "\n")
+                $tmp .= $s[$i];
         }
         if (!empty($tmp)) {
             $ret[] = $tmp;
