@@ -150,7 +150,7 @@ class FontNode extends Node {
         $firstChar = null;
         $lastChar = null;
         foreach ($lines as $line) {
-            if (preg_match("; N .notdef ;", $line)) {
+            if (preg_match("; N .notdef ;", $line) && !$firstChar) {
                 continue;
             }
             //C 6 ; WX 500 ; N .notdef ; B 49 0 451 700 ; ---------> pattern sample
