@@ -18,6 +18,10 @@ class FontWidthsNode extends Node {
     public function setData($data) {
         $this->_data = $data;
     }
+
+    public function getData() {
+        return $this->_data;
+    }
     
     public function output(&$pdf) {
         parent::preOutput($pdf);

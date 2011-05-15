@@ -50,6 +50,10 @@ class FontNode extends Node {
         $this->parseMetricsFile();
     }
 
+    public function getWidths() {
+        return $this->_widths;
+    }
+
     public function getType() {
         return $this->_type;
     }

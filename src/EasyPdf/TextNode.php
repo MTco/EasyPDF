@@ -12,33 +12,34 @@ class TextNode extends Node {
     /**
      * Text content.
      */
-    private $_text;
+    protected $_text;
 
     /**
      * X position.
      */
-    private $_x;
+    protected $_x;
 
     /**
      * Y position.
      */
-    private $_y;
+    protected $_y;
 
     /**
      * Font of text.
      */
-    private $_font;
+    protected $_font;
 
     /**
      * Size of text.
      */
-    private $_size;
+    protected $_size;
     
     public function __construct(PageNode &$page, $text = '') {
         $engine = $page->getEngine();
         parent::__construct($engine, $engine->getSingleIndex(), $page->getGeneration(), $page);
         
         $this->_text = $text;
+        $this->_size = 12;
     }
 
     public function setX($x) {
@@ -66,26 +67,36 @@ class TextNode extends Node {
     private function data(&$pdf) {
         parent::writeObjHeader($pdf);
 
-        $x = $this->_x * $this->_engine->getUnitFactor();
-        $y = ($this->_parent->getHeight() - ($this->_y * $this->_engine->getUnitFactor()));// * $this->_engine->getUnitFactor();
 
-        $stream = "BT\n";
-        $stream .= "/F" . $this->_font->getIndex() . " " . $this->_size . " Tf\n";
-        $stream .= "$x $y Td\n";
-        $stream .= "(" . $this->_text . ") Tj\n";
-        $stream .= "ET\n";
-
-        $compressed = \gzcompress($stream);
+        $stream = $this->streamText($this->_text);
+        $this->writeStream($pdf, $stream);
         
+        parent::writeObjFooter($pdf);
+
+    }
+
+    protected function writeStream(&$pdf, $stream) {
+        $compressed = \gzcompress($stream);
+
         $pdf .= "<< /Length " . strlen($compressed) . "\n";
         $pdf .= "/Filter /FlateDecode\n";
         $pdf .= "/Length1 " . strlen($stream) . " >>\n";
         $pdf .= "stream\n";
         $pdf .= $compressed;
         $pdf .= "\nendstream\n";
-        
-        parent::writeObjFooter($pdf);
+    }
 
+    protected function streamText($text) {
+        $x = $this->_x * $this->_engine->getUnitFactor();
+        $y = ($this->_parent->getHeight() - ($this->_y * $this->_engine->getUnitFactor()));// * $this->_engine->getUnitFactor();
+
+        $stream = "BT\n";
+        $stream .= "/F" . $this->_font->getIndex() . " " . $this->_size . " Tf\n";
+        $stream .= "$x $y Td\n";
+        $stream .= "(" . $text . ") Tj\n";
+        $stream .= "ET\n";
+
+        return $stream;
     }
     
 }

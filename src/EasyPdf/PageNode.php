@@ -49,6 +49,12 @@ class PageNode extends Node {
         $this->addChild($text);
         $text->setParent($this);
     }
+
+    public function addTextArea(TextAreaNode $textArea) {
+        $this->_content[] = $textArea;
+        $this->addChild($textArea);
+        $textArea->setParent($this);
+    }
     
     /**
      * Set page format.
@@ -93,8 +99,13 @@ class PageNode extends Node {
     }
     
     private function putContent(&$pdf) {
-        $content = $this->_content[0]; //tmp
-        $pdf .= "/Contents " . $content->getIndirectReference() . "\n";
+        $pdf .= "/Contents [";
+        foreach ($this->_content as $c) {
+            $pdf .= $c->getIndirectReference() . " ";
+        }
+        $pdf .= "]\n";
+        //$content = $this->_content[0]; //tmp
+        //$pdf .= "/Contents " . $content->getIndirectReference() . "\n";
     }
     
 }
