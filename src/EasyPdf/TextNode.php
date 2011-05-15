@@ -13,6 +13,16 @@ class TextNode extends Node {
      * Text content.
      */
     private $_text;
+
+    /**
+     * X position.
+     */
+    private $_x;
+
+    /**
+     * Y position.
+     */
+    private $_y;
     
     public function __construct(PageNode &$page, $text = '') {
         $engine = $page->getEngine();
@@ -20,7 +30,15 @@ class TextNode extends Node {
         
         $this->_text = $text;
     }
-    
+
+    public function setX($x) {
+        $this->_x = $x;
+    }
+
+    public function setY($y) {
+        $this->_y = $y;
+    }
+
     public function output(&$pdf) {
         parent::preOutput($pdf);
         $this->data($pdf);
@@ -28,24 +46,14 @@ class TextNode extends Node {
     }
     
     private function data(&$pdf) {
-
-        /*5 0 obj
-<< /Length 73 >>
-stream
-BT
-/F1 24 Tf
-100 100 Td
-(Hello World) Tj
-ET
-endstream
-endobj*/
         parent::writeObjHeader($pdf);
 
-
+        $x = $this->_x * $this->_engine->getUnitFactor();
+        $y = ($this->_parent->getHeight() - $this->_y);// * $this->_engine->getUnitFactor();
 
         $stream = "BT\n";
         $stream .= "/F1 24 Tf\n";
-        $stream .= "100 400 Td\n";
+        $stream .= "$x $y Td\n";
         $stream .= "(" . $this->_text . ") Tj\n";
         $stream .= "ET\n";
 

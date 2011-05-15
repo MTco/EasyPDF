@@ -39,8 +39,10 @@ class PageNode extends Node {
         $this->_resourceNode->addFont($font);
     }
 
-    public function addText($textUser) {
+    public function addText($textUser, $x = 0, $y = 0) {
         $text = new TextNode($this, $textUser);
+        $text->setX($x);
+        $text->setY($y);
         $this->_content[] = $text;
         $this->addChild($text);
         $text->setParent($this);
@@ -59,6 +61,10 @@ class PageNode extends Node {
             $size[$i] *= $this->_engine->getUnitFactor();
         }
         $this->_mediaBox = $size;
+    }
+
+    public function getHeight() {
+        return $this->_mediaBox[3] - $this->_mediaBox[0];
     }
 
     public function output(&$pdf) {
