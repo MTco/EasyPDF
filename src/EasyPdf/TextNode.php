@@ -18,7 +18,6 @@ class TextNode extends Node {
         $engine = $page->getEngine();
         parent::__construct($engine, $engine->getSingleIndex(), $page->getGeneration(), $page);
         
-        //$this->_text = gzdeflate($text);
         $this->_text = $text;
     }
     
@@ -49,25 +48,18 @@ endobj*/
         $stream .= "100 400 Td\n";
         $stream .= "(" . $this->_text . ") Tj\n";
         $stream .= "ET\n";
-        
-        $pdf .= "<< /Length " . strlen($stream) . " >>\n";
-        $pdf .= "stream\n";
-        $pdf .= $stream;
-        $pdf .= "endstream\n";
-        
-        parent::writeObjFooter($pdf);
 
-/*
-        parent::writeObjHeader($pdf);
-     
-        $encoded = $this->_text;
-        $pdf .= "<< /Filter /FlateDecode /Length " . strlen($encoded) . " >>\n";
+        $compressed = \gzcompress($stream);
+        
+        $pdf .= "<< /Length " . strlen($compressed) . "\n";
+        $pdf .= "/Filter /FlateDecode\n";
+        $pdf .= "/Length1 " . strlen($stream) . " >>\n";
         $pdf .= "stream\n";
-        $pdf .= $encoded;
+        $pdf .= $compressed;
         $pdf .= "\nendstream\n";
-
+        
         parent::writeObjFooter($pdf);
- */
+
     }
     
 }

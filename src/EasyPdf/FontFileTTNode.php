@@ -23,7 +23,7 @@ class FontFileTTNode extends Node {
         parent::__construct($pdf, $pdf->getSingleIndex(), $fontD->getGeneration(), $fontD);
 
         $this->_data = \file_get_contents($fontD->getFontNode()->getFilename());
-        $this->_compressedData = \gzdeflate($this->_data);
+        $this->_compressedData = \gzcompress($this->_data);
     }
 
     public function output(&$pdf) {
@@ -35,12 +35,12 @@ class FontFileTTNode extends Node {
     private function data(&$pdf) {
         parent::writeObjHeader($pdf);
 
-        $pdf .= "<< /Length " . strlen($this->_data) . "\n";
-        //$pdf .= "/Filter /FlateDecode\n";
+        $pdf .= "<< /Length " . strlen($this->_compressedData) . "\n";
+        $pdf .= "/Filter /FlateDecode\n";
         $pdf .= "/Length1 " . strlen($this->_data) . "\n";
         $pdf .= ">>\n";
         $pdf .= "stream\n";
-        $pdf .= $this->_data;
+        $pdf .= $this->_compressedData;
         $pdf .= "\nendstream\n";
 
         parent::writeObjFooter($pdf);
