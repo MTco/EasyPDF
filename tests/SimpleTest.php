@@ -17,12 +17,12 @@ function test1() {
 
     $pdf = new EasyPdf\Engine();
     $pdf->setUnit('mm');
-    $fontDeOuf = $pdf->addFont('../tests/Chicken Butt.ttf', 'TrueType', 'ma font de ouf');
+    $fontDeOuf = $pdf->addFont('../tests/arial.ttf', 'TrueType', 'ma font de ouf');
     $page = new EasyPdf\PageNode($pdf);
     $page->addFontResource($fontDeOuf);
 
     $page->setFormat(array(0, 0, 210, 297));
-    $page->addText("Hello World!", 0, 10);
+    $page->addText("Hello World!", $fontDeOuf, 16, 0, 6);
     
     $pdf->addPage($page);
     $pdf->writePDF();

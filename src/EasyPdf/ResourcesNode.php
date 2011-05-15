@@ -32,7 +32,7 @@ class ResourcesNode extends Node {
         $pdf .= "/Font <<\n";
         
         for ($i = 0; $i < count($this->_fonts); ++$i) {
-            $pdf .= "/F" . ($i + 1) . " " . $this->_fonts[$i]->getIndirectReference() . "\n";
+            $pdf .= "/F" . $this->_fonts[$i]->getIndex() . " " . $this->_fonts[$i]->getIndirectReference() . "\n";
         }
         
         $pdf .= ">>\n>>\n";

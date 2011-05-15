@@ -23,6 +23,16 @@ class TextNode extends Node {
      * Y position.
      */
     private $_y;
+
+    /**
+     * Font of text.
+     */
+    private $_font;
+
+    /**
+     * Size of text.
+     */
+    private $_size;
     
     public function __construct(PageNode &$page, $text = '') {
         $engine = $page->getEngine();
@@ -33,6 +43,14 @@ class TextNode extends Node {
 
     public function setX($x) {
         $this->_x = $x;
+    }
+
+    public function setFont(FontNode $font) {
+        $this->_font = $font;
+    }
+
+    public function setSize($size) {
+        $this->_size = $size;
     }
 
     public function setY($y) {
@@ -52,7 +70,7 @@ class TextNode extends Node {
         $y = ($this->_parent->getHeight() - ($this->_y * $this->_engine->getUnitFactor()));// * $this->_engine->getUnitFactor();
 
         $stream = "BT\n";
-        $stream .= "/F1 24 Tf\n";
+        $stream .= "/F" . $this->_font->getIndex() . " " . $this->_size . " Tf\n";
         $stream .= "$x $y Td\n";
         $stream .= "(" . $this->_text . ") Tj\n";
         $stream .= "ET\n";
