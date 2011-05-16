@@ -19,7 +19,7 @@ class FontFileTTNode extends Node {
      */
     private $_compressedData;
 
-    public function __construct(Engine $pdf, FontDescriptor $fontD) {
+    public function __construct(Engine $pdf, FontDescriptorNode $fontD) {
         parent::__construct($pdf, $pdf->getSingleIndex(), $fontD->getGeneration(), $fontD);
 
         $this->_data = \file_get_contents($fontD->getFontNode()->getFilename());

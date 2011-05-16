@@ -7,7 +7,7 @@ namespace EasyPdf;
  * @author greg
  */
 
-class FontDescriptor extends \EasyPdf\Node {
+class FontDescriptorNode extends \EasyPdf\Node {
 
     /**
      * Font Node.

@@ -63,3 +63,5 @@ test1();
 if ($debug) {
     include_once '/usr/share/php5/xhprof/footer.php';
 }
+
+echo "\nTest End.\n";

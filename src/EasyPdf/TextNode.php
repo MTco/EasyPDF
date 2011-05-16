@@ -7,7 +7,7 @@ namespace EasyPdf;
  * @author greg
  */
 
-class TextNode extends Node {
+class TextNode extends Node implements IDrawable {
     
     /**
      * Text content.
@@ -48,6 +48,14 @@ class TextNode extends Node {
 
     public function setFont(FontNode $font) {
         $this->_font = $font;
+    }
+
+    public function getX() {
+        return $this->_x;
+    }
+
+    public function getY() {
+        return $this->_y;
     }
 
     public function setSize($size) {

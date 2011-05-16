@@ -24,9 +24,21 @@ class TextAreaNode extends TextNode {
      */
     private $_lineHeight;
 
+    /**
+     * Geometric Childs, used for positionement.
+     */
+    private $_geometricChilds;
+
     public function __construct(PageNode &$page, $text = '') {
         parent::__construct($page, $text);
         $this->_lineHeight = null;
+    }
+
+    /**
+     * Add a geometric child.
+     * It will be added to PDF engine too.
+     */
+    public function addGeometricChild() {
     }
 
     /*
