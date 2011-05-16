@@ -94,11 +94,11 @@ class TextAreaNode extends TextNode {
 	for($i = 0; $i < $l; $i++) {
             $last = 0;
             if (!isset($cw[ord($s[$i])])) {
-                $w += $missingWidth * $this->_size / 1000;
-                $last = $missingWidth * $this->_size / 1000;;
+                $last = $missingWidth * $this->_size / 1000;
+                $w += $last;
             } else {
-                $w += ($cw[ord($s[$i])] * $this->_size / 1000);
                 $last = ($cw[ord($s[$i])] * $this->_size / 1000);
+                $w += $last;
             }
             if ($w >= $this->_width * $this->_engine->getUnitFactor() || $s[$i] == "\n") {
                 $ret[] = $tmp;
