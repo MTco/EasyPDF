@@ -99,6 +99,9 @@ class Node {
     }
 
     public function output(&$pdf) {
+        if ($this->_writted) { // 1 time is enough.
+            return;
+        }
         $this->_writted = true;
         foreach ($this->_childs as $child) {
             $child->output($pdf);

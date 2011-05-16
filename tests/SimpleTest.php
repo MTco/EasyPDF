@@ -32,11 +32,19 @@ function test1() {
     $page->addTextArea($textArea);
     $pdf->addPage($page);
 
-    $stressValue = 2000;
+    $stressValue = 200;
     for ($i = 0; $i < $stressValue; ++$i) {
         $page2 = new EasyPdf\PageNode($pdf);
         $page2->addFontResource($fontDeOuf); // wont be duplicate
         $page2->setFormat(array(0, 0, 210, 297));
+
+
+        $textArea = new EasyPdf\TextAreaNode($page, file_get_contents("text"));
+        $textArea->setWidth(210);
+        $textArea->setSize(11);
+        $textArea->setFont($fontDeOuf);
+        $textArea->setX(0);
+        $textArea->setY(10);
         $page2->addTextArea($textArea);
         $pdf->addPage($page2);
     }
@@ -47,5 +55,11 @@ function test1() {
     
 }
 
+$debug = file_exists("/usr/share/php5/xhprof/header.php") && file_exists("/usr/share/php5/xhprof/footer.php");
+if ($debug) {
+    include_once '/usr/share/php5/xhprof/header.php';
+}
 test1();
-
+if ($debug) {
+    include_once '/usr/share/php5/xhprof/footer.php';
+}
