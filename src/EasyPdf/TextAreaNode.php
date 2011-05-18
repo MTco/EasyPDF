@@ -92,7 +92,7 @@ class TextAreaNode extends TextNode {
      * Temporary tools, return string width.
      * TODO, refacto width string to accept utf8 char.
      */
-    private function splitLine($s)
+    private function splitLine(&$s)
     {
 	//Get width of a string in the current font
         $ret = array();
@@ -103,6 +103,7 @@ class TextAreaNode extends TextNode {
 	$w = 0;
 	$l = strlen($s);
         $tmp = "";
+        $maxWidth = $this->_width * $this->_engine->getUnitFactor();
 	for($i = 0; $i < $l; $i++) {
             $last = 0;
             if (!isset($cw[ord($s[$i])])) {
@@ -112,7 +113,7 @@ class TextAreaNode extends TextNode {
                 $last = ($cw[ord($s[$i])] * $this->_size / 1000);
                 $w += $last;
             }
-            if ($w >= $this->_width * $this->_engine->getUnitFactor() || $s[$i] == "\n") {
+            if ($w >=  $maxWidth || $s[$i] == "\n") {
                 $ret[] = $tmp;
                 $tmp = "";
                 $w = $last;
