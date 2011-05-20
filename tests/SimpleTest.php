@@ -17,22 +17,30 @@ function test1() {
 
     $pdf = new EasyPdf\Engine();
     $pdf->setUnit('mm');
-    $fontDeOuf = $pdf->addFont('../tests/arial.ttf', 'TrueType', 'ma font de ouf');
+    //$fontDeOuf = $pdf->addFont('../tests/arial.ttf', 'TrueType', 'ma font de ouf');
 
     $page = new EasyPdf\PageNode($pdf);
-    $page->addFontResource($fontDeOuf);
+    //$page->addFontResource($fontDeOuf);
     $page->setFormat(array(0, 0, 210, 297));
 
-    $textArea = new EasyPdf\TextAreaNode($page, file_get_contents("text"));
+    $box = new EasyPdf\AreaNode($page);
+    $box->setX(0);
+    $box->setY(0);
+    $box->setWidth(200);
+    $box->setHeight(290);
+    $box->drawArea(true);
+    $page->addContent($box);
+    $pdf->addPage($page);
+
+    /*$textArea = new EasyPdf\TextAreaNode($page, file_get_contents("text"));
     $textArea->setWidth(210);
     $textArea->setSize(11);
     $textArea->setFont($fontDeOuf);
     $textArea->setX(0);
     $textArea->setY(10);
-    $page->addTextArea($textArea);
-    $pdf->addPage($page);
+    $page->addContent($textArea);
 
-    $stressValue = 200;
+    $stressValue = 20;
     for ($i = 0; $i < $stressValue; ++$i) {
         $page2 = new EasyPdf\PageNode($pdf);
         $page2->addFontResource($fontDeOuf); // wont be duplicate
@@ -45,9 +53,9 @@ function test1() {
         $textArea->setFont($fontDeOuf);
         $textArea->setX(0);
         $textArea->setY(10);
-        $page2->addTextArea($textArea);
+        $page2->addContent($textArea);
         $pdf->addPage($page2);
-    }
+    }*/
     $pdf->writePDF();
     
     $downIn = microtime(true) - $startTime;

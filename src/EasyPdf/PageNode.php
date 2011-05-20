@@ -50,7 +50,14 @@ class PageNode extends Node {
         $text->setParent($this);
     }
 
-    public function addTextArea(TextAreaNode $textArea) {
+    /*public function addTextArea(TextAreaNode $textArea) {
+        $this->_content[] = $textArea;
+        $this->addChild($textArea);
+        $textArea->setParent($this);
+    }*/
+
+
+    public function addContent($textArea) {
         $this->_content[] = $textArea;
         $this->addChild($textArea);
         $textArea->setParent($this);

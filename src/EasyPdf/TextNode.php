@@ -75,7 +75,6 @@ class TextNode extends Node implements IDrawable {
     private function data(&$pdf) {
         parent::writeObjHeader($pdf);
 
-
         $stream = $this->streamText($this->_text);
         $this->writeStream($pdf, $stream);
         

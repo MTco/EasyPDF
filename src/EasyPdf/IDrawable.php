@@ -29,5 +29,15 @@ interface IDrawable {
      */
     public function setY($v);
 
+    /**
+     * Geometric parent must extends IDrawable.
+     */
+    public function getGeometricParent();
+
+    /**
+     * Add a geometric child.
+     */
+    public function addGeometricChild(IDrawable $child);
+
 }
 ?>
