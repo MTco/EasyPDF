@@ -26,10 +26,28 @@ function test1() {
     $box = new EasyPdf\AreaNode($page);
     $box->setX(0);
     $box->setY(0);
-    $box->setWidth(200);
-    $box->setHeight(290);
+    $box->setWidth(210);
+    $box->setHeight(297);
     $box->drawArea(true);
     $page->addContent($box);
+
+    $nbBox = 3;
+    $parent = $box;
+    $offsetX = $parent->getWidth() / ($nbBox) / 2;
+    $offsetY = $parent->getHeight() / ($nbBox) / 2;
+    for ($i = 0; $i < $nbBox; ++$i) {
+        $child = new EasyPdf\AreaNode($page);
+        $child->drawArea(true);
+        $child->setGeometricParent($parent);
+        $child->setX($parent->getX() + $offsetX);
+        $child->setY($parent->getY() + $offsetY);
+        $child->setWidth($parent->getWidth() - ($offsetX * 2));
+        $child->setHeight($parent->getHeight() - ($offsetY * 2));
+        echo $parent->getHeight() . "\n";
+        $page->addContent($child);
+        $parent = $child;
+    }
+
     $pdf->addPage($page);
 
     /*$textArea = new EasyPdf\TextAreaNode($page, file_get_contents("text"));

@@ -35,9 +35,9 @@ interface IDrawable {
     public function getGeometricParent();
 
     /**
-     * Add a geometric child.
+     * Set the geometric parent.
      */
-    public function addGeometricChild(IDrawable $child);
+    public function setGeometricParent(IDrawable $parent);
 
 }
 ?>

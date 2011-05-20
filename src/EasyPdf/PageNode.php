@@ -82,6 +82,10 @@ class PageNode extends Node {
         return $this->_mediaBox[3] - $this->_mediaBox[0];
     }
 
+    public function getWidth() {
+        return $this->_mediaBox[2] - $this->_mediaBox[1];
+    }
+
     public function output(&$pdf) {
         parent::preOutput($pdf);
         $this->header($pdf);
