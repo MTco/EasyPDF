@@ -63,17 +63,12 @@ class AreaNode extends Node implements IDrawable {
         parent::writeObjHeader($pdf);
         
         if ($this->_drawArea) {
-            $addX = 0;
-            $addY = 0;
-            if ($this->_geometricParent) {
-                $addX = $this->_geometricParent->getX();
-                $addY = $this->_geometricParent->getY();
-            }
+
             $unitFactor = $this->_engine->getUnitFactor();
             $pageHeight = $this->_parent->getHeight();
             $toWrite = sprintf("%.2F %.2F %.2F %.2F re %s",
-                    ($this->_x + $addX) * $unitFactor,
-                    $pageHeight - ($this->_y + $addY),
+                    ($this->getX()) * $unitFactor,
+                    $pageHeight - ($this->getY()* $unitFactor),
                     $this->_width * $unitFactor,
                     -$this->_height * $unitFactor,
                     'S');
@@ -96,10 +91,16 @@ class AreaNode extends Node implements IDrawable {
     }
 
     public function getX() {
+        if ($this->_geometricParent) {
+            return $this->_geometricParent->getX() + $this->_x;
+        }
         return $this->_x;
     }
 
     public function getY() {
+        if ($this->_geometricParent) {
+            return $this->_geometricParent->getY() + $this->_y;
+        }
         return $this->_y;
     }
 
