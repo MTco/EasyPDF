@@ -7,7 +7,7 @@ namespace EasyPdf;
  * @author greg
  */
 
-class TextAreaNode extends AreaNode {
+class TextAreaNode extends Node {
 
     /**
      * Line height.
@@ -19,14 +19,26 @@ class TextAreaNode extends AreaNode {
      */
     private $_textNode;
 
+    /**
+     * Box node.
+     */
+    private $_areaNode;
+
     public function __construct(PageNode &$page) {
-        parent::__construct($page);
+        $engine = $page->getEngine();
+        parent::__construct($engine, $engine->getSingleIndex(), $page->getGeneration(), $page);
 
         $this->_lineHeight = null;
     }
 
     public function setTextNode(TextNode $text) {
         $this->_textNode = $text;
+    }
+
+    public function setAreaNode(AreaNode $area) {
+        $this->_areaNode = $area;
+        $this->addChild($area);
+        $this->_parent->addContent($area);
     }
 
     public function output(&$pdf) {
@@ -38,17 +50,24 @@ class TextAreaNode extends AreaNode {
     private function data(&$pdf) {
         parent::writeObjHeader($pdf);
 
+        if ($this->_textNode && $this->_areaNode) {
+            $this->_textNode->setGeometricParent($this->_areaNode);
+        }
+
         if (!$this->_lineHeight) {
             $prop = $this->_textNode->getFont()->getProperties();
             $this->_lineHeight = $prop['Ascender']['value'];
             $this->_lineHeight *= $this->_textNode->getSize() / 1000;
         }
-        $totalBreak = $this->splitLine($this->_text);
+        
+        $totalBreak = $this->splitLine($this->_textNode->getText());
 
-        $x = $this->getX() * $this->_engine->getUnitFactor();
-        $y = ($this->_parent->getHeight() - ($this->getY() * $this->_engine->getUnitFactor()));
+        $x = $this->_textNode->getX() * $this->_engine->getUnitFactor();
+        $y = ($this->_parent->getHeight() - ($this->_textNode->getY() * $this->_engine->getUnitFactor()));
+        $y -= $this->_lineHeight;
 
         $stream = "";
+
         foreach ($totalBreak as $text) {
             $stream .= "BT\n";
             $stream .= "/F" . $this->_textNode->getFont()->getIndex() . " " . $this->_textNode->getSize() . " Tf\n";
@@ -63,28 +82,27 @@ class TextAreaNode extends AreaNode {
     }
 
     /**
-     * Temporary tools, return string width.
+     * Temporary tools, split text.
      * TODO, refacto width string to accept utf8 char.
      */
     private function splitLine(&$s)
     {
 	//Get width of a string in the current font
         $ret = array();
-	$s = (string)$s;
 	$cw = $this->_textNode->getFont()->getWidths()->getData();
         $missingWidth = $this->_textNode->getFont()->getProperties();
         $missingWidth = $missingWidth['MissingWidth']['value'];
 	$w = 0;
 	$l = strlen($s);
         $tmp = "";
-        $maxWidth = $this->_width * $this->_engine->getUnitFactor();
+        $maxWidth = $this->_areaNode->getWidth() * $this->_engine->getUnitFactor();
 	for($i = 0; $i < $l; $i++) {
             $last = 0;
             if (!isset($cw[ord($s[$i])])) {
-                $last = $missingWidth * $this->_size / 1000;
+                $last = $missingWidth * $this->_textNode->getSize() / 1000;
                 $w += $last;
             } else {
-                $last = ($cw[ord($s[$i])] * $this->_size / 1000);
+                $last = ($cw[ord($s[$i])] * $this->_textNode->getSize() / 1000);
                 $w += $last;
             }
             if ($w >=  $maxWidth || $s[$i] == "\n") {

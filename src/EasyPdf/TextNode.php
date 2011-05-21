@@ -7,22 +7,12 @@ namespace EasyPdf;
  * @author greg
  */
 
-class TextNode extends Node implements IDrawable {
+class TextNode extends ADrawableNode {
     
     /**
      * Text content.
      */
     protected $_text;
-
-    /**
-     * X position.
-     */
-    protected $_x;
-
-    /**
-     * Y position.
-     */
-    protected $_y;
 
     /**
      * Font of text.
@@ -34,15 +24,9 @@ class TextNode extends Node implements IDrawable {
      */
     protected $_size;
 
-    /**
-     * The geometric parent.
-     */
-    private $_geometricParent;
     
     public function __construct(PageNode &$page) {
-        $engine = $page->getEngine();
-        parent::__construct($engine, $engine->getSingleIndex(), $page->getGeneration(), $page);
-        
+        parent::__construct($page);
         $this->_size = 12;
     }
 
@@ -50,44 +34,24 @@ class TextNode extends Node implements IDrawable {
         $this->_text = $text;
     }
 
-    public function getSize() {
-        return $this->_size;
+    public function getText() {
+        return $this->_text;
     }
 
-    public function setX($x) {
-        $this->_x = $x;
+    public function getSize() {
+        return $this->_size;
     }
 
     public function getFont() {
         return $this->_font;
     }
 
-    public function getGeometricParent() {
-        return $this->_geometricParent;
-    }
-
-    public function setGeometricParent(IDrawable $parent) {
-        $this->_geometricParent = $parent;
-    }
-
     public function setFont(FontNode $font) {
         $this->_font = $font;
     }
 
-    public function getX() {
-        return $this->_x;
-    }
-
-    public function getY() {
-        return $this->_y;
-    }
-
     public function setSize($size) {
         $this->_size = $size;
-    }
-
-    public function setY($y) {
-        $this->_y = $y;
     }
 
     public function output(&$pdf) {
@@ -118,8 +82,8 @@ class TextNode extends Node implements IDrawable {
     }
 
     protected function streamText($text) {
-        $x = $this->_x * $this->_engine->getUnitFactor();
-        $y = ($this->_parent->getHeight() - ($this->_y * $this->_engine->getUnitFactor()));// * $this->_engine->getUnitFactor();
+        $x = $this->getX() * $this->_engine->getUnitFactor();
+        $y = ($this->_parent->getHeight() - ($this->getY() * $this->_engine->getUnitFactor()));
 
         $stream = "BT\n";
         $stream .= "/F" . $this->_font->getIndex() . " " . $this->_size . " Tf\n";

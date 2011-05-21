@@ -7,50 +7,10 @@ namespace EasyPdf;
  * @author greg
  */
 
-class AreaNode extends Node implements IDrawable {
-    
-    /**
-     * X position.
-     */
-    protected $_x;
-
-    /**
-     * Y position.
-     */
-    protected $_y;
-    /**
-     * Width box.
-     */
-    protected $_width;
-
-    /**
-     * Height box.
-     */
-    protected $_height;
-
-    /**
-     * Draw bounding box.
-     */
-    protected $_drawArea;
-
-    /**
-     * The geometric parent.
-     */
-    protected $_geometricParent;
+class AreaNode extends ADrawableNode {
 
     public function __construct(PageNode $page) {
-        $engine = $page->getEngine();
-        parent::__construct($engine, $engine->getSingleIndex(), $page->getGeneration(), $page);
-
-        $this->_geometricParent = null;
-    }
-
-    public function getGeometricParent() {
-        return $this->_geometricParent;
-    }
-
-    public function setGeometricParent(IDrawable $parent) {
-        $this->_geometricParent = $parent;
+        parent::__construct($page);
     }
 
     public function output(&$pdf) {
@@ -77,6 +37,10 @@ class AreaNode extends Node implements IDrawable {
             $pdf .= "stream\n";
             $pdf .= $toWrite;
             $pdf .= "\nendstream\n";
+        } else {
+         $pdf .= "<< /Length 0 >>\n";
+            $pdf .= "stream\n";
+            $pdf .= "\nendstream\n";
         }
 
         parent::writeObjFooter($pdf);
@@ -84,43 +48,5 @@ class AreaNode extends Node implements IDrawable {
 
     public function drawArea($value) {
         $this->_drawArea = $value;
-    }
-
-    public function setX($x) {
-        $this->_x = $x;
-    }
-
-    public function getX() {
-        if ($this->_geometricParent) {
-            return $this->_geometricParent->getX() + $this->_x;
-        }
-        return $this->_x;
-    }
-
-    public function getY() {
-        if ($this->_geometricParent) {
-            return $this->_geometricParent->getY() + $this->_y;
-        }
-        return $this->_y;
-    }
-
-    public function setY($y) {
-        $this->_y = $y;
-    }
-
-    public function getWidth() {
-        return $this->_width;
-    }
-
-    public function getHeight() {
-        return $this->_height;
-    }
-
-    public function setWidth($width) {
-        $this->_width = $width;
-    }
-
-    public function setHeight($height) {
-        $this->_height = $height;
     }
 }

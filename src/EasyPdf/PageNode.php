@@ -39,24 +39,6 @@ class PageNode extends Node {
         $this->_resourceNode->addFont($font);
     }
 
-    public function addText($textUser, FontNode $font, $size, $x = 0, $y = 0) {
-        $text = new TextNode($this, $textUser);
-        $text->setX($x);
-        $text->setY($y);
-        $text->setFont($font);
-        $text->setSize($size);
-        $this->_content[] = $text;
-        $this->addChild($text);
-        $text->setParent($this);
-    }
-
-    /*public function addTextArea(TextAreaNode $textArea) {
-        $this->_content[] = $textArea;
-        $this->addChild($textArea);
-        $textArea->setParent($this);
-    }*/
-
-
     public function addContent($textArea) {
         $this->_content[] = $textArea;
         $this->addChild($textArea);
