@@ -33,17 +33,41 @@ class TextNode extends Node implements IDrawable {
      * Size of text.
      */
     protected $_size;
+
+    /**
+     * The geometric parent.
+     */
+    private $_geometricParent;
     
-    public function __construct(PageNode &$page, $text = '') {
+    public function __construct(PageNode &$page) {
         $engine = $page->getEngine();
         parent::__construct($engine, $engine->getSingleIndex(), $page->getGeneration(), $page);
         
-        $this->_text = $text;
         $this->_size = 12;
+    }
+
+    public function setText($text) {
+        $this->_text = $text;
+    }
+
+    public function getSize() {
+        return $this->_size;
     }
 
     public function setX($x) {
         $this->_x = $x;
+    }
+
+    public function getFont() {
+        return $this->_font;
+    }
+
+    public function getGeometricParent() {
+        return $this->_geometricParent;
+    }
+
+    public function setGeometricParent(IDrawable $parent) {
+        $this->_geometricParent = $parent;
     }
 
     public function setFont(FontNode $font) {
@@ -82,7 +106,7 @@ class TextNode extends Node implements IDrawable {
 
     }
 
-    protected function writeStream(&$pdf, $stream) {
+    public function writeStream(&$pdf, $stream) {
         $compressed = \gzcompress($stream);
 
         $pdf .= "<< /Length " . strlen($compressed) . "\n";

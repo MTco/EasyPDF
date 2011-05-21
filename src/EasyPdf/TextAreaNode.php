@@ -7,17 +7,7 @@ namespace EasyPdf;
  * @author greg
  */
 
-class TextAreaNode extends TextNode {
-
-    /**
-     * Width box.
-     */
-    private $_width;
-
-    /**
-     * Height box.
-     */
-    private $_height;
+class TextAreaNode extends AreaNode {
 
     /**
      * Line height.
@@ -25,38 +15,22 @@ class TextAreaNode extends TextNode {
     private $_lineHeight;
 
     /**
-     * Geometric Childs, used for positionement.
+     * Text node.
      */
-    private $_geometricChilds;
+    private $_textNode;
 
-    public function __construct(PageNode &$page, $text = '') {
-        parent::__construct($page, $text);
+    public function __construct(PageNode &$page) {
+        parent::__construct($page);
+
         $this->_lineHeight = null;
     }
 
-    /**
-     * Add a geometric child.
-     * It will be added to PDF engine too.
-     */
-    public function addGeometricChild() {
-    }
-
-    /*
-     * TODO, fallback if no width specified.
-     */
-    public function setWidth($width) {
-        $this->_width = $width;
-    }
-
-    /*
-     * TODO, fallback if no height specified.
-     */
-    public function setHeight($height) {
-        $this->_height = $height;
+    public function setTextNode(TextNode $text) {
+        $this->_textNode = $text;
     }
 
     public function output(&$pdf) {
-        parent::preOutput($pdf);
+        Node::preOutput($pdf);
         $this->data($pdf);
         Node::output($pdf);
     }
@@ -65,26 +39,26 @@ class TextAreaNode extends TextNode {
         parent::writeObjHeader($pdf);
 
         if (!$this->_lineHeight) {
-            $prop = $this->_font->getProperties();
+            $prop = $this->_textNode->getFont()->getProperties();
             $this->_lineHeight = $prop['Ascender']['value'];
-            $this->_lineHeight *= $this->_size / 1000;
+            $this->_lineHeight *= $this->_textNode->getSize() / 1000;
         }
         $totalBreak = $this->splitLine($this->_text);
 
-        $x = $this->_x * $this->_engine->getUnitFactor();
-        $y = ($this->_parent->getHeight() - ($this->_y * $this->_engine->getUnitFactor()));
+        $x = $this->getX() * $this->_engine->getUnitFactor();
+        $y = ($this->_parent->getHeight() - ($this->getY() * $this->_engine->getUnitFactor()));
 
         $stream = "";
         foreach ($totalBreak as $text) {
             $stream .= "BT\n";
-            $stream .= "/F" . $this->_font->getIndex() . " " . $this->_size . " Tf\n";
+            $stream .= "/F" . $this->_textNode->getFont()->getIndex() . " " . $this->_textNode->getSize() . " Tf\n";
             $stream .= "$x $y Td\n";
             $stream .= "(" . $text . ") Tj\n";
             $y -= $this->_lineHeight;
             $stream .= "ET\n";
         }
 
-        parent::writeStream($pdf, $stream);
+        $this->_textNode->writeStream($pdf, $stream);
         parent::writeObjFooter($pdf);
     }
 
@@ -97,8 +71,8 @@ class TextAreaNode extends TextNode {
 	//Get width of a string in the current font
         $ret = array();
 	$s = (string)$s;
-	$cw = $this->_font->getWidths()->getData();
-        $missingWidth = $this->_font->getProperties();
+	$cw = $this->_textNode->getFont()->getWidths()->getData();
+        $missingWidth = $this->_textNode->getFont()->getProperties();
         $missingWidth = $missingWidth['MissingWidth']['value'];
 	$w = 0;
 	$l = strlen($s);

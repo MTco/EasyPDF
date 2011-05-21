@@ -14,10 +14,8 @@ function testBox() {
 
     $pdf = new EasyPdf\Engine();
     $pdf->setUnit('mm');
-    //$fontDeOuf = $pdf->addFont('../tests/arial.ttf', 'TrueType', 'ma font de ouf');
 
     $page = new EasyPdf\PageNode($pdf);
-    //$page->addFontResource($fontDeOuf);
     $page->setFormat(array(0, 0, 210, 297));
 
     $box = new EasyPdf\AreaNode($page);
@@ -50,7 +48,7 @@ function testBox() {
     }
 
     $pdf->addPage($page);
-    $pdf->writePDF();
+    $pdf->writePDF('testBox.pdf');
 
     $downIn = microtime(true) - $startTime;
     echo "Done in " . $downIn . " secondes.\n";

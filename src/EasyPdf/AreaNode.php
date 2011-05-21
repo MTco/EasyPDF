@@ -21,22 +21,22 @@ class AreaNode extends Node implements IDrawable {
     /**
      * Width box.
      */
-    private $_width;
+    protected $_width;
 
     /**
      * Height box.
      */
-    private $_height;
+    protected $_height;
 
     /**
      * Draw bounding box.
      */
-    private $_drawArea;
+    protected $_drawArea;
 
     /**
      * The geometric parent.
      */
-    private $_geometricParent;
+    protected $_geometricParent;
 
     public function __construct(PageNode $page) {
         $engine = $page->getEngine();
