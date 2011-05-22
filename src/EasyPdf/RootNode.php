@@ -35,8 +35,12 @@ class RootNode extends Node {
         parent::preOutput($pdf);
         parent::writeObjHeader($pdf);
 
+        $pages = $this->_pagesNode->getPages();
+
         $pdf .= "<< /Type /Catalog\n";
         $pdf .= "/Pages " . $this->_pagesNode->getIndirectReference() . "\n";
+        $pdf .= "/OpenAction [" . $pages[0]->getIndirectReference() . " /FitH null]\n";
+        $pdf .= "/PageLayout /OneColumn\n";
         $pdf .= ">>\n";
 
         parent::writeObjFooter($pdf);

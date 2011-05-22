@@ -38,7 +38,7 @@ class AreaNode extends ADrawableNode {
             $pdf .= $toWrite;
             $pdf .= "\nendstream\n";
         } else {
-         $pdf .= "<< /Length 0 >>\n";
+            $pdf .= "<< /Length 0 >>\n";
             $pdf .= "stream\n";
             $pdf .= "\nendstream\n";
         }

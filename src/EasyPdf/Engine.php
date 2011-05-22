@@ -15,6 +15,11 @@ class Engine {
     private $_rootNode;
 
     /**
+     * Info node.
+     */
+    private $_infoNode;
+
+    /**
      * Current index of pdf objects.
      */
     private $_currentIndex;
@@ -50,6 +55,8 @@ class Engine {
         $this->_currentIndex = $this->_startIndex;
         $this->_rootNode = new \EasyPdf\RootNode($this, $this->_currentIndex++, 0, $this);
         $this->_sortedChilds[$this->_rootNode->getIndex()] = $this->_rootNode;
+        $this->_infoNode = new InfoNode($this);
+        $this->_sortedChilds[$this->_infoNode->getIndex()] = $this->_infoNode;
         $this->setUnit('pt');
     }
     
@@ -108,6 +115,7 @@ class Engine {
     public function writePDF($filename = 'output.pdf') {
         $pdf;
         $this->_rootNode->output($pdf);
+        $this->_infoNode->output($pdf);
         $this->crossReference($pdf);
 
         if (!file_put_contents($filename, $pdf)) {
@@ -132,6 +140,7 @@ class Engine {
         $pdf .= "\ntrailer\n";
         $pdf .= "<< /Size " . $currentIdx . "\n";
         $pdf .= "/Root " . $this->_rootNode->getIndirectReference() . "\n";
+        $pdf .= "/Info " . $this->_infoNode->getIndirectReference() . "\n";
         $pdf .= ">>\n";
         $pdf .= "startxref\n";
         $pdf .= $startXref . "\n";
@@ -144,6 +153,14 @@ class Engine {
 
     public function addPage(PageNode $page) {
         $this->_rootNode->getPagesNode()->addPage($page);
+    }
+
+    public function setProducer($producer) {
+        $this->_infoNode->setProducer($producer);
+    }
+
+    public function setDateCreation($date) {
+        $this->_infoNode->setDateCreation($date);
     }
 
     private function generateFatalError($error) {

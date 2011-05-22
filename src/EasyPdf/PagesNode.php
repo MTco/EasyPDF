@@ -26,6 +26,10 @@ class PagesNode extends Node {
         parent::output($pdf);
     }
 
+    public function getPages() {
+        return $this->_pageNodes;
+    }
+
     public function addPage(PageNode $page) {
         $this->_pageNodes[] = $page;
         $this->addChild($page);
