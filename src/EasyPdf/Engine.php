@@ -130,11 +130,11 @@ class Engine {
         $startIdx = $this->getStartIndex() - 1;
         $currentIdx = $this->getCurrentIndex() + 1;
         $pdf .= $startIdx . " " . $currentIdx . "\n";
-        $pdf .= "0000000000 65535 f\n";
+        $pdf .= "0000000000 65535 f \n";
 
         ksort($this->_sortedChilds);
         foreach ($this->_sortedChilds as $child) {
-            $pdf .= sprintf("%010s %05s n\n", $child->getOffset(), $child->getGeneration());
+            $pdf .= sprintf("%010s %05s n \n", $child->getOffset(), $child->getGeneration());
         }
 
         $pdf .= "\ntrailer\n";

@@ -97,8 +97,6 @@ class PageNode extends Node {
             $pdf .= $c->getIndirectReference() . " ";
         }
         $pdf .= "]\n";
-        //$content = $this->_content[0]; //tmp
-        //$pdf .= "/Contents " . $content->getIndirectReference() . "\n";
     }
     
 }

@@ -33,11 +33,11 @@ class TextAreaNode extends Node {
 
     public function setTextNode(TextNode $text) {
         $this->_textNode = $text;
+        $this->addChild($text);
     }
 
     public function setAreaNode(AreaNode $area) {
         $this->_areaNode = $area;
-        $this->addChild($area);
         $this->_parent->addContent($area);
     }
 

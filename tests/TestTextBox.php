@@ -30,7 +30,7 @@ function testTextBox() {
     $box->setY(10);
     $box->setWidth(190);
     $box->setHeight(277);
-    $box->drawArea(false);
+    $box->drawArea(true);
 
     $textAreaNode = new EasyPdf\TextAreaNode($page);
     $textAreaNode->setTextNode($textNode);
