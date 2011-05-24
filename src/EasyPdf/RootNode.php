@@ -19,6 +19,7 @@ class RootNode extends Node {
         
         $this->_pagesNode = new PagesNode($engine, $index + 1, $generation, $this);
         $this->addChild($this->_pagesNode);
+
     }
 
     public function getPagesNode() {

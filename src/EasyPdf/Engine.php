@@ -49,8 +49,22 @@ class Engine {
      */
     private $_sortedChilds;
 
+    /**
+     * Template loader
+     */
+    private $_tplLoader;
+
+    /**
+     * Template engine.
+     */
+    private $_tplEngine;
+
 
     public function __construct() {
+        // init template engine.
+        $this->_tplLoader = new \Twig_Loader_Filesystem(__DIR__ . '/Templates');
+        $this->_tplEngine = new \Twig_Environment($this->_tplLoader, array());
+
         $this->_startIndex = 1;
         $this->_currentIndex = $this->_startIndex;
         $this->_rootNode = new \EasyPdf\RootNode($this, $this->_currentIndex++, 0, $this);
@@ -59,7 +73,11 @@ class Engine {
         $this->_sortedChilds[$this->_infoNode->getIndex()] = $this->_infoNode;
         $this->setUnit('pt');
     }
-    
+
+    public function getTplEngine() {
+        return $this->_tplEngine;
+    }
+
     public function addFont($filename, $type = "TrueType", $singleReference = null) {
         if (!$singleReference) {
             $singleReference = $filename;

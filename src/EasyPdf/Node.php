@@ -45,6 +45,16 @@ class Node {
     protected $_writted;
 
     /**
+     * Format for output in pdf.
+     */
+    protected $_template;
+
+    /**
+     * Template name.
+     */
+    protected $_templateName;
+
+    /**
      * Default constructor, initialize default members states.
      */
     public function __construct(Engine $engine, $index, $generation = 0, $parent = null) {
@@ -54,6 +64,9 @@ class Node {
         $this->_parent = $parent;
         $this->_childs = array();
         $this->_writted = false;
+        
+        $tpl = explode("\\", get_class($this));
+        $this->_templateName = $tpl[count($tpl) -1] . ".tpl";
     }
 
     public function getIndex() {
@@ -81,7 +94,6 @@ class Node {
         return $this->_offset;
     }
 
-
     protected function writeObjHeader(&$pdf) {
         $pdf .= $this->_index . " " . $this->_generation . " obj\n";
     }
@@ -106,6 +118,13 @@ class Node {
         foreach ($this->_childs as $child) {
             $child->output($pdf);
         }
+    }
+
+    /**
+     * Overridable method to precompute value for pdf output.
+     */
+    protected function onAdd() {
+        
     }
 
     protected function generateFatalError($error) {

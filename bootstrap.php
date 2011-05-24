@@ -6,7 +6,12 @@ use Symfony\Component\ClassLoader\UniversalClassLoader;
 
 $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array(
-    'Symfony'          => __DIR__.'/../vendor/symfony/src',
+    'Symfony'          => __DIR__.'/vendor/symfony/src',
     'EasyPdf'          => __DIR__.'/src',
 ));
+
+$loader->registerPrefixes(array(
+    'Twig_' => __DIR__.'/vendor/twig/lib',
+));
+
 $loader->register();
