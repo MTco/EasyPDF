@@ -30,7 +30,7 @@ class RootNode extends Node {
         $this->header($pdf);
         parent::output($pdf);
     }
-
+/*
     private function header(&$pdf) {
         $pdf = "%PDF-1.4\n";
         parent::preOutput($pdf);
@@ -46,5 +46,17 @@ class RootNode extends Node {
 
         parent::writeObjFooter($pdf);
     }
+*/
+    private function header(&$pdf) {
+        $this->_offset = 9; // tmp
+        
+        $pages = $this->_pagesNode->getPages();
 
+        $data = array();
+        $data['pagesNode'] = $this->_pagesNode->getIndirectReference();
+        $data['openPage'] = $pages[0]->getIndirectReference();
+        $data['index'] = $this->getIndex();
+        $data['generation'] = $this->getGeneration();
+        $pdf .= $this->_template->render($data);
+    }
 }

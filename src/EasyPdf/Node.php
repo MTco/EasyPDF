@@ -67,6 +67,12 @@ class Node {
         
         $tpl = explode("\\", get_class($this));
         $this->_templateName = $tpl[count($tpl) -1] . ".tpl";
+        try {
+            $this->_template = $this->_engine->getTplEngine()->loadTemplate($this->_templateName);
+        } catch (\Twig_Error $e) {
+            echo "Unable to find template: " . $this->_templateName . "\n";
+        }
+
     }
 
     public function getIndex() {
