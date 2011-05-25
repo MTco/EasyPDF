@@ -55,6 +55,12 @@ class Node {
     protected $_templateName;
 
     /**
+     * True if node has been added on pdf document,
+     * False otherwise.
+     */
+    protected $_added;
+
+    /**
      * Default constructor, initialize default members states.
      */
     public function __construct(Engine $engine, $index, $generation = 0, $parent = null) {
@@ -64,6 +70,7 @@ class Node {
         $this->_parent = $parent;
         $this->_childs = array();
         $this->_writted = false;
+        $this->_added = false;
         
         $tpl = explode("\\", get_class($this));
         $this->_templateName = $tpl[count($tpl) -1] . ".tpl";
@@ -79,10 +86,18 @@ class Node {
         return $this->_index;
     }
 
+    public function giveMeAnotherLife() {
+        $node = clone($this);
+        $node->_index = $this->_engine->getSingleIndex();
+        $node->_added = false;
+        return $node;
+    }
+
     public function addChild(Node $child) {
         $this->_engine->addSortedChild($child);
         $this->_childs[] = $child;
-        $this->onAdd();
+        $child->_added = true;
+        $child->onAdd();
     }
 
     public function getEngine() {
@@ -131,7 +146,6 @@ class Node {
      * Overridable method to precompute value for pdf output.
      */
     protected function onAdd() {
-        
     }
 
     protected function getBaseDataForTpl() {

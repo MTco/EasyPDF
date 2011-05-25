@@ -29,6 +29,16 @@ abstract class ADrawableNode extends Node implements IDrawable {
     protected $_height;
 
     /**
+     * Absolute X position.
+     */
+    protected $_absoluteX;
+
+    /**
+     * Absolute Y position.
+     */
+    protected $_absoluteY;
+
+    /**
      * The geometric parent.
      */
     protected $_geometricParent;
@@ -36,6 +46,8 @@ abstract class ADrawableNode extends Node implements IDrawable {
     public function __construct($parent) {
         $engine = $parent->getEngine();
         parent::__construct($engine, $engine->getSingleIndex(), $parent->getGeneration(), $parent);
+        $this->_x = null;
+        $this->_y = null;
     }
 
     public function setX($x) {

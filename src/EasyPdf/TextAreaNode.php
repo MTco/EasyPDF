@@ -85,8 +85,7 @@ class TextAreaNode extends Node {
      * Temporary tools, split text.
      * TODO, refacto width string to accept utf8 char.
      */
-    private function splitLine(&$s)
-    {
+    private function splitLine(&$s) {
 	//Get width of a string in the current font
         $ret = array();
 	$cw = $this->_textNode->getFont()->getWidths()->getData();

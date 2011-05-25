@@ -25,9 +25,15 @@ function testText() {
     $text->setFont($font);
     $text->setText("Hello World!");
     $text->setY(10);
-    $text->setX(10);
+    $text->setX(0);
 
+    echo $page->getX() . "\n";
     $page->addContent($text);
+    echo $page->getX() . "\n";
+    $text = $text->giveMeAnotherLife();
+    $text->setX(null);
+    $page->addContent($text);
+    echo $page->getX() . "\n";
 
     $pdf->addPage($page);
     $pdf->writePDF('testText.pdf');

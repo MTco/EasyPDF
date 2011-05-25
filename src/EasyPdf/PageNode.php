@@ -24,12 +24,24 @@ class PageNode extends Node {
      * Node resources.
      */
     private $_resourceNode;
+
+    /**
+     * Position X of current content.
+     */
+    private $_x;
+
+    /**
+     * Position Y of current content.
+     */
+    private $_y;
     
     public function __construct(Engine &$pdf, $mediaBox = null) {
         $parent = $pdf->getRootNode()->getPagesNode();
         parent::__construct($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
 
         $this->_contents = array();
+        $this->_x = 0;
+        $this->_y = 0;
         $this->setFormat($mediaBox);
         $this->_resourceNode = new ResourcesNode($pdf, $this);
         $this->addChild($this->_resourceNode);
@@ -39,10 +51,10 @@ class PageNode extends Node {
         $this->_resourceNode->addFont($font);
     }
 
-    public function addContent($textArea) {
-        $this->_contents[] = $textArea;
-        $this->addChild($textArea);
-        $textArea->setParent($this);
+    public function addContent($content) {
+        $this->_contents[] = $content;
+        $this->addChild($content);
+        $content->setParent($this);
     }
     
     /**
@@ -82,7 +94,22 @@ class PageNode extends Node {
         $data['contents'] = $this->_contents;
         $pdf .= $this->_template->render($data);
     }
-    
+
+    public function setX($x) {
+        $this->_x = $x;
+    }
+
+    public function getX() {
+        return $this->_x;
+    }
+
+    public function getY() {
+        return $this->_y;
+    }
+
+    public function setY($y) {
+        $this->_y = $y;
+    }
 }
 
 ?>
