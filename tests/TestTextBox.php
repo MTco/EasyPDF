@@ -38,6 +38,10 @@ function testTextBox() {
 
     $page->addContent($textAreaNode);
 
+    $textNode = $textNode->giveMeAnotherLife();
+    $textNode->setText("Hello World!");
+    $page->addContent($textNode);
+
     $pdf->addPage($page);
     $pdf->writePDF('testTextBox.pdf');
 

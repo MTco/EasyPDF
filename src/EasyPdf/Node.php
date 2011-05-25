@@ -96,8 +96,6 @@ class Node {
     public function addChild(Node $child) {
         $this->_engine->addSortedChild($child);
         $this->_childs[] = $child;
-        $child->_added = true;
-        $child->onAdd();
     }
 
     public function getEngine() {

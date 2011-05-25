@@ -24,11 +24,6 @@ class TextNode extends ADrawableNode {
      */
     protected $_size;
 
-    /**
-     * Stream computed on onAdd method.
-     */
-    protected $_precomputedStream;
-
     
     public function __construct(PageNode &$page) {
         parent::__construct($page);
@@ -67,31 +62,25 @@ class TextNode extends ADrawableNode {
     }
     
     private function data(&$pdf) {
-        parent::writeObjHeader($pdf);
-
         $stream = $this->streamText($this->_text);
         $this->writeStream($pdf, $stream);
-        
-        parent::writeObjFooter($pdf);
-
     }
 
     public function writeStream(&$pdf, $stream) {
         $compressed = \gzcompress($stream);
 
-        $pdf .= "<< /Length " . strlen($compressed) . "\n";
-        $pdf .= "/Filter /FlateDecode\n";
-        $pdf .= "/Length1 " . strlen($stream) . " >>\n";
-        $pdf .= "stream\n";
-        $pdf .= $compressed;
-        $pdf .= "\nendstream\n";
+        $data = $this->getBaseDataForTpl();
+        $data['length'] = strlen($compressed);
+        $data['filter'] = "FlateDecode";
+        $data['length1'] = strlen($stream);
+        $data['stream'] = $compressed;
+
+        $pdf .= $this->_template->render($data);
     }
 
     protected function streamText($text) {
         $x = $this->_absoluteX;
         $y = $this->_absoluteY;
-
-        echo "ici" . $x . "\n";
 
         $stream = "BT\n";
         $stream .= "/F" . $this->_font->getIndex() . " " . $this->_size . " Tf\n";

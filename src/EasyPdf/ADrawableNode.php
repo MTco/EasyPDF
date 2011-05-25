@@ -55,14 +55,14 @@ abstract class ADrawableNode extends Node implements IDrawable {
     }
 
     public function getX() {
-        if ($this->_geometricParent) {
+        if ($this->_geometricParent && $this->_x !== null) {
             return $this->_geometricParent->getX() + $this->_x;
         }
         return $this->_x;
     }
 
     public function getY() {
-        if ($this->_geometricParent) {
+        if ($this->_geometricParent && $this->_x !== null) {
             return $this->_geometricParent->getY() + $this->_y;
         }
         return $this->_y;
@@ -94,5 +94,21 @@ abstract class ADrawableNode extends Node implements IDrawable {
 
     public function setGeometricParent(IDrawable $parent) {
         $this->_geometricParent = $parent;
+    }
+
+    public function getAbsoluteX() {
+        return $this->_absoluteX;
+    }
+
+    public function getAbsoluteY() {
+        return $this->_absoluteY;
+    }
+
+    public function setAbsoluteX($x) {
+        $this->_absoluteX = $x;
+    }
+
+    public function setAbsoluteY($y) {
+        $this->_absoluteY = $y;
     }
 }

@@ -24,6 +24,11 @@ class TextAreaNode extends Node {
      */
     private $_areaNode;
 
+    /**
+     * Line splitted in array.
+     */
+    private $_splittedLines;
+
     public function __construct(PageNode &$page) {
         $engine = $page->getEngine();
         parent::__construct($engine, $engine->getSingleIndex(), $page->getGeneration(), $page);
@@ -34,11 +39,13 @@ class TextAreaNode extends Node {
     public function setTextNode(TextNode $text) {
         $this->_textNode = $text;
         $this->addChild($text);
+        $this->onAdd();
     }
 
     public function setAreaNode(AreaNode $area) {
         $this->_areaNode = $area;
         $this->_parent->addContent($area);
+        $this->onAdd();
     }
 
     public function output(&$pdf) {
@@ -48,22 +55,10 @@ class TextAreaNode extends Node {
     }
 
     private function data(&$pdf) {
-        parent::writeObjHeader($pdf);
+        $totalBreak = $this->_splittedLines;
 
-        if ($this->_textNode && $this->_areaNode) {
-            $this->_textNode->setGeometricParent($this->_areaNode);
-        }
-
-        if (!$this->_lineHeight) {
-            $prop = $this->_textNode->getFont()->getProperties();
-            $this->_lineHeight = $prop['Ascender']['value'];
-            $this->_lineHeight *= $this->_textNode->getSize() / 1000;
-        }
-        
-        $totalBreak = $this->splitLine($this->_textNode->getText());
-
-        $x = $this->_textNode->getX() * $this->_engine->getUnitFactor();
-        $y = ($this->_parent->getHeight() - ($this->_textNode->getY() * $this->_engine->getUnitFactor()));
+        $x = $this->_textNode->getAbsoluteX();
+        $y = $this->_textNode->getAbsoluteY();
         $y -= $this->_lineHeight;
 
         $stream = "";
@@ -77,8 +72,17 @@ class TextAreaNode extends Node {
             $stream .= "ET\n";
         }
 
-        $this->_textNode->writeStream($pdf, $stream);
-        parent::writeObjFooter($pdf);
+        $compressed = \gzcompress($stream);
+
+        $data = $this->getBaseDataForTpl();
+        $data['length'] = strlen($compressed);
+        $data['filter'] = "FlateDecode";
+        $data['length1'] = strlen($stream);
+        $data['stream'] = $compressed;
+
+        $pdf .= $this->_template->render($data);
+        //$this->_textNode->writeStream($pdf, $stream);
+        //parent::writeObjFooter($pdf);
     }
 
     /**
@@ -116,6 +120,45 @@ class TextAreaNode extends Node {
             $ret[] = $tmp;
         }
 	return $ret;
+    }
+
+    protected function onAdd() {
+        if (!$this->_textNode || !$this->_textNode->getText() || !$this->_added
+                || !$this->_areaNode) {
+            return;
+        }
+
+        $this->_textNode->setGeometricParent($this->_areaNode);
+
+        if (!$this->_lineHeight) {
+            $prop = $this->_textNode->getFont()->getProperties();
+            $this->_lineHeight = $prop['Ascender']['value'];
+            $this->_lineHeight *= $this->_textNode->getSize() / 1000;
+        }
+
+        $this->_splittedLines = $this->splitLine($this->_textNode->getText());
+
+        $cw = $this->_textNode->getFont()->getWidths()->getData();
+        $mw = $this->_textNode->getFont()->getProperties();
+        $mw = $mw['MissingWidth']['value'];
+        $ll = count($this->_splittedLines) - 1;
+        $addedX = Tools\String::getWidthString($this->_splittedLines[$ll], $this->_textNode->getSize(), $cw, $mw);
+        $addedY = $this->_lineHeight * ($ll + 1);
+
+        if ($this->_textNode->getX() === null) {
+            $x = $this->_areaNode->getX() * $this->_engine->getUnitFactor();
+        } else {
+            $x = $this->_textNode->getX() * $this->_engine->getUnitFactor();
+        }
+        if ($this->_textNode->getY() === null) {
+            $y = ($this->_parent->getHeight() - ($this->_areaNode->getY() * $this->_engine->getUnitFactor()));
+        } else {
+            $y = ($this->_parent->getHeight() - ($this->_textNode->getY() * $this->_engine->getUnitFactor()));
+        }
+        $this->_textNode->setAbsoluteX($x);
+        $this->_textNode->setAbsoluteY($y);
+        $this->_parent->setX($addedX + $x);
+        $this->_parent->setY($y - $addedY);
     }
 
 }

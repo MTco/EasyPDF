@@ -53,6 +53,8 @@ class PageNode extends Node {
 
     public function addContent($content) {
         $this->_contents[] = $content;
+        $content->_added = true;
+        $content->onAdd();
         $this->addChild($content);
         $content->setParent($this);
     }
