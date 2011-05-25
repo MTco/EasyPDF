@@ -30,14 +30,9 @@ class FontWidthsNode extends Node {
     }
     
     private function data(&$pdf) {
-        parent::writeObjHeader($pdf);
-        
-        $pdf .= "[";
-        foreach ($this->_data as $v) {
-            $pdf .= $v . " ";
-        }
-        $pdf .= "]\n";
-        parent::writeObjFooter($pdf);
+        $data = $this->getBaseDataForTpl();
+        $data['widths'] = $this->_data;
+        $pdf .= $this->_template->render($data);
     }
     
 }

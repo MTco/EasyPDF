@@ -46,28 +46,21 @@ class FontDescriptorNode extends \EasyPdf\Node {
     }
     
     private function data(&$pdf) {
-        parent::writeObjHeader($pdf);
         $properties = $this->_fontNode->getProperties();
-        
-        $pdf .= "<< /Type /FontDescriptor\n";
-        $pdf .= "/FontName /" . $properties['FontName']['value'] . "\n";
-        $pdf .= "/Ascent " . $properties['Ascender']['value'] . "\n";
-        $pdf .= "/Descent " . $properties['Descender']['value'] . "\n";
-        $pdf .= "/CapHeight " . $properties['CapHeight']['value'] . "\n";
-        $pdf .= "/Flags " . $properties['Flags']['value'] . "\n";
-        $pdf .= "/FontBBox [" . $properties['FontBBox']['value'][0] . " " . $properties['FontBBox']['value'][1] . " " . $properties['FontBBox']['value'][2] . " " . (int)$properties['FontBBox']['value'][3] . "]\n";
-        $pdf .= "/ItalicAngle " . $properties['ItalicAngle']['value'] . "\n";
-        $pdf .= "/StemV " . $properties['StdVW']['value'] . "\n";
-        $pdf .= "/MissingWidth " . $properties['MissingWidth']['value'] . "\n";
 
-        if ($this->_fontNode->getType() == "TrueType") {
-            $pdf .= "/FontFile2 " . $this->_fontFile->getIndirectReference() . "\n";
-        }
+        $data = $this->getBaseDataForTpl();
+        $data['fontName'] = $properties['FontName']['value'];
+        $data['ascent'] = $properties['Ascender']['value'];
+        $data['descent'] = $properties['Descender']['value'];
+        $data['capHeight'] = $properties['CapHeight']['value'];
+        $data['flags'] = $properties['Flags']['value'];
+        $data['fontBBox'] = $properties['FontBBox']['value'];
+        $data['italicAngle'] = $properties['ItalicAngle']['value'];
+        $data['stemV'] = $properties['StdVW']['value'];
+        $data['missingWidth'] = $properties['MissingWidth']['value'];
+        $data['fontFile'] = $this->_fontFile->getIndirectReference();
 
-        $pdf .= ">>\n";
-        
-        
-        parent::writeObjFooter($pdf);
+        $pdf .= $this->_template->render($data);
     }
     
 }

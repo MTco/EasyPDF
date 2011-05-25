@@ -82,6 +82,7 @@ class Node {
     public function addChild(Node $child) {
         $this->_engine->addSortedChild($child);
         $this->_childs[] = $child;
+        $this->onAdd();
     }
 
     public function getEngine() {

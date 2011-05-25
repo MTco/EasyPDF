@@ -39,14 +39,10 @@ class InfoNode extends Node {
 
     private function data(&$pdf) {
 
-        parent::writeObjHeader($pdf);
-
-        $pdf .= "<<\n";
-        $pdf .= "/Producer (EasyPdf)\n";
-        $pdf .= "/CreationDate (D:20110420140858)\n";
-        $pdf .= ">>\n";
-        
-        parent::writeObjFooter($pdf);
+        $data = $this->getBaseDataForTpl();
+        $data['producer'] = "EasyPdf";
+        $data['creationDate'] = 'D:'. date('YmdHis');
+        $pdf .= $this->_template->render($data);
         
     }
 }

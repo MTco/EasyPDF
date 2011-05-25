@@ -33,16 +33,11 @@ class FontFileTTNode extends Node {
     }
 
     private function data(&$pdf) {
-        parent::writeObjHeader($pdf);
-
-        $pdf .= "<< /Length " . strlen($this->_compressedData) . "\n";
-        $pdf .= "/Filter /FlateDecode\n";
-        $pdf .= "/Length1 " . strlen($this->_data) . "\n";
-        $pdf .= ">>\n";
-        $pdf .= "stream\n";
-        $pdf .= $this->_compressedData;
-        $pdf .= "\nendstream\n";
-
-        parent::writeObjFooter($pdf);
+        $data = $this->getBaseDataForTpl();
+        $data['length'] = strlen($this->_compressedData);
+        $data['filter'] = "FlateDecode";
+        $data['length1'] = strlen($this->_data);
+        $data['stream'] = $this->_compressedData;
+        $pdf .= $this->_template->render($data);
     }
 }

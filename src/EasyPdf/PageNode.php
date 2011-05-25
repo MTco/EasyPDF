@@ -18,7 +18,7 @@ class PageNode extends Node {
     /**
      * Content of the page.
      */
-    private $_content;
+    private $_contents;
 
     /**
      * Node resources.
@@ -29,7 +29,7 @@ class PageNode extends Node {
         $parent = $pdf->getRootNode()->getPagesNode();
         parent::__construct($pdf, $pdf->getSingleIndex(), $parent->getGeneration(), $parent);
 
-        $this->_content = array();
+        $this->_contents = array();
         $this->setFormat($mediaBox);
         $this->_resourceNode = new ResourcesNode($pdf, $this);
         $this->addChild($this->_resourceNode);
@@ -40,7 +40,7 @@ class PageNode extends Node {
     }
 
     public function addContent($textArea) {
-        $this->_content[] = $textArea;
+        $this->_contents[] = $textArea;
         $this->addChild($textArea);
         $textArea->setParent($this);
     }
@@ -70,33 +70,17 @@ class PageNode extends Node {
 
     public function output(&$pdf) {
         parent::preOutput($pdf);
-        $this->header($pdf);
+        $this->data($pdf);
         parent::output($pdf);
     }
 
-    private function header(&$pdf) {
-        parent::writeObjHeader($pdf);
-
-        $pdf .= "<< /Type /Page\n";
-        $pdf .= "/Parent " . $this->_parent->getIndirectReference() . "\n";
-        $pdf .= "/MediaBox [" . $this->_mediaBox[0] . " " . $this->_mediaBox[1] . " " . $this->_mediaBox[2] . " " . $this->_mediaBox[3] . "]\n";
-        $this->putResources($pdf);
-        $this->putContent($pdf);
-        $pdf .= ">>\n";
-
-        parent::writeObjFooter($pdf);
-    }
-    
-    private function putResources(&$pdf) {
-        $pdf .= "/Resources " . $this->_resourceNode->getIndirectReference() . "\n";
-    }
-    
-    private function putContent(&$pdf) {
-        $pdf .= "/Contents [";
-        foreach ($this->_content as $c) {
-            $pdf .= $c->getIndirectReference() . " ";
-        }
-        $pdf .= "]\n";
+    private function data(&$pdf) {
+        $data = $this->getBaseDataForTpl();
+        $data['parent'] = $this->_parent->getIndirectReference();
+        $data['mediaBox'] = $this->_mediaBox;
+        $data['resources'] = $this->_resourceNode->getIndirectReference();
+        $data['contents'] = $this->_contents;
+        $pdf .= $this->_template->render($data);
     }
     
 }

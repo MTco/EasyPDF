@@ -1,7 +1,7 @@
 {% include 'ObjectHeader.tpl' %}
 <<
 /Type /Pages
-/Kids [{{ kids }}]
+/Kids [{% for key, page in kids %} {{ page.getIndirectReference() }} {% endfor %}]
 /Count {{ numberPage }}
 >>
 {% include 'ObjectFooter.tpl' %}

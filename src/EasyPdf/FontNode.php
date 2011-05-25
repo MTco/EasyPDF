@@ -69,18 +69,16 @@ class FontNode extends Node {
     }
     
     private function data(&$pdf) {
-        parent::writeObjHeader($pdf);
+        $data = $this->getBaseDataForTpl();
+        $data['fontName'] = $this->_properties['FontName']['value'];
+        $data['subtype'] = $this->_type;
+        $data['firstChar'] = $this->_properties['FirstChar']['value'];
+        $data['lastChar'] = $this->_properties['LastChar']['value'];
+        $data['widths'] = $this->_widths->getIndirectReference();
+        $data['fontDescriptor'] = $this->_fontDescriptor->getIndirectReference();
+        $data['encoding'] = "WinAnsiEncoding";
 
-        $pdf .= "<< /Type /Font\n";
-        $pdf .= "/BaseFont /" . $this->_properties['FontName']['value'] . "\n";
-        $pdf .= "/Subtype /" . $this->_type . "\n";
-        $pdf .= "/FirstChar " . $this->_properties['FirstChar']['value'] . " " . "/LastChar " . $this->_properties['LastChar']['value'] . "\n";
-        $pdf .= "/Widths " . $this->_widths->getIndirectReference() . "\n";
-        $pdf .= "/FontDescriptor " . $this->_fontDescriptor->getIndirectReference() . "\n";
-        $pdf .= "/Encoding /WinAnsiEncoding\n";
-        $pdf .= ">>\n";
-        
-        parent::writeObjFooter($pdf);
+        $pdf .= $this->_template->render($data);
     }
     
     public function getProperties() {

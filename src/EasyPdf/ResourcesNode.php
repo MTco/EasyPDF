@@ -25,19 +25,9 @@ class ResourcesNode extends Node {
     }
     
     private function data(&$pdf) {
-        parent::writeObjHeader($pdf);
-        
-        $pdf .= "<<\n";
-        $pdf .= "/ProcSet [/PDF /Text]\n";
-        $pdf .= "/Font <<\n";
-        
-        for ($i = 0; $i < count($this->_fonts); ++$i) {
-            $pdf .= "/F" . $this->_fonts[$i]->getIndex() . " " . $this->_fonts[$i]->getIndirectReference() . "\n";
-        }
-        
-        $pdf .= ">>\n>>\n";
-        
-        parent::writeObjFooter($pdf);
+        $data = $this->getBaseDataForTpl();
+        $data['fonts'] = $this->_fonts;
+        $pdf .= $this->_template->render($data);
     }
     
     public function addFont(FontNode $font) {

@@ -32,29 +32,21 @@ class PagesNode extends Node {
 
     public function addPage(PageNode $page) {
         $this->_pageNodes[] = $page;
-        $this->addChild($page);
         $page->setParent($this);
+        $this->addChild($page);
     }
 
     private function data(&$pdf) {
-        if (!count($this->_pageNodes)) {
+        if (empty($this->_pageNodes)) {
             $this->generateFatalError("Cannot generate PDF without page.\n");
         }
 
-        parent::writeObjHeader($pdf);
-
-        $pdf .= "<< /Type /Pages\n";
-        $pdf .= "/Kids [";
-        foreach ($this->_pageNodes as $page) {
-            $pdf .= $page->getIndirectReference() . " ";
-        }
-        $pdf .= "]\n";
-        $pdf .= "/Count " . count($this->_pageNodes) . "\n";
-        $pdf .= ">>\n";
-
-        parent::writeObjFooter($pdf);
+        $data = $this->getBaseDataForTpl();
+        $data['kids'] = $this->_pageNodes;
+        $data['numberPage'] = count($this->_pageNodes);
+        $pdf .= $this->_template->render($data);
     }
-    
+     
 }
 
 ?>
