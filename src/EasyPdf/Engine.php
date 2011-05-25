@@ -59,11 +59,17 @@ class Engine {
      */
     private $_tplEngine;
 
+    /**
+     * Template for pdf header.
+     */
+    private $_tplPdfHeader;
+
 
     public function __construct() {
         // init template engine.
         $this->_tplLoader = new \Twig_Loader_Filesystem(__DIR__ . '/Templates');
         $this->_tplEngine = new \Twig_Environment($this->_tplLoader, array());
+        $this->_tplPdfHeader = $this->getTplEngine()->loadTemplate('PdfHeader.tpl');
 
         $this->_startIndex = 1;
         $this->_currentIndex = $this->_startIndex;
@@ -131,7 +137,7 @@ class Engine {
     }
 
     public function writePDF($filename = 'output.pdf') {
-        $pdf;
+        $pdf = $this->_tplPdfHeader->render(array());
         $this->_rootNode->output($pdf);
         $this->_infoNode->output($pdf);
         $this->crossReference($pdf);

@@ -22,7 +22,7 @@ class PagesNode extends Node {
 
     public function output(&$pdf) {
         parent::preOutput($pdf);
-        $this->header($pdf);
+        $this->data($pdf);
         parent::output($pdf);
     }
 
@@ -36,7 +36,7 @@ class PagesNode extends Node {
         $page->setParent($this);
     }
 
-    private function header(&$pdf) {
+    private function data(&$pdf) {
         if (!count($this->_pageNodes)) {
             $this->generateFatalError("Cannot generate PDF without page.\n");
         }

@@ -1,4 +1,3 @@
-%PDF-1.4
 {% include 'ObjectHeader.tpl' %}
 <<
 /Type /Catalog

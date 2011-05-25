@@ -70,7 +70,7 @@ class Node {
         try {
             $this->_template = $this->_engine->getTplEngine()->loadTemplate($this->_templateName);
         } catch (\Twig_Error $e) {
-            echo "Unable to find template: " . $this->_templateName . "\n";
+            echo "Error on template: " . $this->_templateName . "\n";
         }
 
     }
@@ -132,6 +132,11 @@ class Node {
     protected function onAdd() {
         
     }
+
+    protected function getBaseDataForTpl() {
+        return array('index' => $this->getIndex(), 'generation' => $this->getGeneration());
+    }
+
 
     protected function generateFatalError($error) {
         Node::staticGenerateFatalError($error);
